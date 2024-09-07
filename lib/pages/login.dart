@@ -1,7 +1,20 @@
 import 'package:flutter/material.dart';
-import 'registrarse.dart';
+import 'menuAdmin.dart';
+import 'menuCliente.dart';
+import "registrarse.dart";
+import '../services/firebaseUsuario_service.dart'; // Importa el servicio de Firebase
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final FirebaseServicioUsuario _usuarioService =
+      FirebaseServicioUsuario(); // Instancia del servicio
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,6 +59,7 @@ class LoginScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 30),
                 TextField(
+                  controller: _emailController,
                   decoration: InputDecoration(
                     hintText: 'Email',
                     hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
@@ -61,6 +75,7 @@ class LoginScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 20),
                 TextField(
+                  controller: _passwordController,
                   decoration: InputDecoration(
                     hintText: 'Contraseña',
                     hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
@@ -77,8 +92,51 @@ class LoginScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 30),
                 ElevatedButton(
-                  onPressed: () {
-                    // Acción al presionar el botón de "Ingresar"
+                  onPressed: () async {
+                    print('Botón presionado');
+                    String email = _emailController.text;
+                    String password = _passwordController.text;
+
+                    // Verificar credenciales
+                    var resultado = await _usuarioService.verificarCredenciales(
+                        email, password);
+
+                    if (resultado != null) {
+                      Map<String, dynamic> userData = resultado['userData'];
+                      String idUsuario = resultado['idUsuario'];
+                      String rol = userData['Rol'];
+                      String urlImgUsu = userData['Imagen'];
+
+                      print('Rol del usuario: $rol'); // Depuración
+                      print('ID del usuario: $idUsuario'); // Depuración
+                       print('URL iamgen del usuario: $urlImgUsu');
+
+                      if (rol == 'Administrador') {
+                        print('Redirigiendo a MenuAdmin');
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                MenuAdmin(idUsuario: idUsuario),
+                          ),
+                        );
+                      } else if (rol == 'Cliente') {
+                        print('Redirigiendo a MenuCliente');
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                MenuCliente(idUsuario: idUsuario),
+                          ),
+                        );
+                      }
+                    } else {
+                      print('Email o contraseña incorrectos');
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                            content: Text('Email o contraseña incorrectos')),
+                      );
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF334155),
@@ -90,11 +148,10 @@ class LoginScreen extends StatelessWidget {
                 SizedBox(height: 20),
                 GestureDetector(
                   onTap: () {
+                    // Navegar a la página de registro
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              SignUpPage()), // Asegúrate de que Registrarse es el nombre correcto de tu widget en registrarse.dart
+                      MaterialPageRoute(builder: (context) => SignUpPage()),
                     );
                   },
                   child: Text(

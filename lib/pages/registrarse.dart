@@ -11,7 +11,8 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController nombreController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController contraseniaController = TextEditingController();
-
+  final TextEditingController imagenController = TextEditingController(); // Nuevo controlador para imagen
+  
   // Instancia del servicio de Firebase
   final FirebaseServicioUsuario servicioUsuario = FirebaseServicioUsuario();
 
@@ -162,6 +163,27 @@ class _SignUpPageState extends State<SignUpPage> {
                           ),
                           style: TextStyle(color: Colors.white),
                         ),
+                        SizedBox(height: 16),
+                        // Imagen URL Field
+                        TextFormField(
+                          controller: imagenController, // Controlador para URL de la imagen
+                          decoration: InputDecoration(
+                            labelText: 'URL de Imagen de Perfil',
+                            labelStyle: TextStyle(color: Colors.white),
+                            filled: true,
+                            fillColor: Colors.transparent,
+                            border: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white, width: 2),
+                            ),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white),
+                            ),
+                          ),
+                          style: TextStyle(color: Colors.white),
+                        ),
                         SizedBox(height: 32),
                         // Sign Up Button
                         ElevatedButton(
@@ -169,9 +191,10 @@ class _SignUpPageState extends State<SignUpPage> {
                             String nombre = nombreController.text;
                             String email = emailController.text;
                             String contrasenia = contraseniaController.text;
+                            String imagenUrl = imagenController.text;  // Obtén el valor de la URL de imagen
 
                             // Verificamos que los campos no estén vacíos
-                            if (nombre.isEmpty || email.isEmpty || contrasenia.isEmpty) {
+                            if (nombre.isEmpty || email.isEmpty || contrasenia.isEmpty || imagenUrl.isEmpty) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text('Por favor, llena todos los campos')),
                               );
@@ -180,7 +203,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
                             try {
                               // Llamamos al servicio para registrar al usuario
-                              await servicioUsuario.registrarUsuario(nombre, email, contrasenia);
+                              await servicioUsuario.registrarUsuario(nombre, email, contrasenia, imagenUrl);
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text('Usuario registrado correctamente')),
                               );
