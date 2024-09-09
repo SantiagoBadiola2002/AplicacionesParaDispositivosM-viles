@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/firebaseUsuario_service.dart'; // Importa el servicio que creaste
+import './listarProductosAdmin.dart';
+import './crearProductoAdmin.dart';
 
 class MenuAdmin extends StatefulWidget {
   final String idUsuario; // Recibe el ID del usuario
@@ -47,7 +49,8 @@ class _MenuAdminState extends State<MenuAdmin> {
         ),
         child: usuario == null
             ? Center(
-                child: CircularProgressIndicator(), // Muestra un cargando si no hay datos
+                child:
+                    CircularProgressIndicator(), // Muestra un cargando si no hay datos
               )
             : Center(
                 child: Column(
@@ -57,8 +60,10 @@ class _MenuAdminState extends State<MenuAdmin> {
                     CircleAvatar(
                       radius: 50,
                       backgroundImage: usuario!.imagen.isNotEmpty
-                          ? NetworkImage(usuario!.imagen) // Cargar la imagen desde la URL
-                          : AssetImage('lib/images/placeholder.png') as ImageProvider, // Imagen por defecto si no hay imagen
+                          ? NetworkImage(
+                              usuario!.imagen) // Cargar la imagen desde la URL
+                          : AssetImage('lib/images/placeholder.png')
+                              as ImageProvider, // Imagen por defecto si no hay imagen
                     ),
                     SizedBox(height: 16),
                     Text(
@@ -73,31 +78,47 @@ class _MenuAdminState extends State<MenuAdmin> {
                     ElevatedButton(
                       onPressed: () {
                         print('Crear Producto');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  NuevoProductoScreen()), // Navegar a NuevoProductoScreen
+                        );
                       },
                       child: Text('Crear Producto'),
                       style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white, 
+                        foregroundColor: Colors.white,
                         backgroundColor: Color(0xFF1E293B), // Color del texto
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.zero, // Botones sin redondear
+                          borderRadius:
+                              BorderRadius.zero, // Botones sin redondear
                         ),
                       ),
                     ),
+
                     SizedBox(height: 16),
                     // Botón Listar Productos
                     ElevatedButton(
                       onPressed: () {
                         print('Listar Productos');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  ProductList()), // Navegar a la pantalla de ProductList
+                        );
                       },
                       child: Text('Listar Productos'),
                       style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white, 
+                        foregroundColor: Colors.white,
                         backgroundColor: Color(0xFF1E293B), // Color del texto
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.zero, // Botones sin redondear
+                          borderRadius:
+                              BorderRadius.zero, // Botones sin redondear
                         ),
                       ),
                     ),
+
                     SizedBox(height: 16),
                     // Botón Salir
                     ElevatedButton(
@@ -106,10 +127,11 @@ class _MenuAdminState extends State<MenuAdmin> {
                       },
                       child: Text('Salir'),
                       style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white, 
+                        foregroundColor: Colors.white,
                         backgroundColor: Color(0xFF1E293B), // Color del texto
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.zero, // Botones sin redondear
+                          borderRadius:
+                              BorderRadius.zero, // Botones sin redondear
                         ),
                       ),
                     ),

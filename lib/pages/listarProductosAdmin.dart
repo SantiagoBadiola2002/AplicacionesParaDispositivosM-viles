@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../services/firebaseProductos_service.dart'; // Asegúrate de tener el servicio importado
+import '../services/firebaseProductos_service.dart';
+import './verYEditarProductoAdmin.dart'; // Asegúrate de importar la pantalla correcta
 
 class ProductList extends StatelessWidget {
   final FirebaseServicioProducto firebaseServicioProducto = FirebaseServicioProducto();
@@ -12,12 +13,11 @@ class ProductList extends StatelessWidget {
         backgroundColor: Colors.teal,
       ),
       body: Container(
-        // Usa un Container para aplicar el gradiente al fondo
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color(0xFF318C7A), // Color #318C7A
-              Color(0xFF1E293B), // Color #1E293B
+              Color(0xFF318C7A),
+              Color(0xFF1E293B),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -34,7 +34,7 @@ class ProductList extends StatelessWidget {
               return Center(child: Text('No hay productos disponibles'));
             }
 
-            final herramientas = snapshot.data!;
+            final productos = snapshot.data!;
 
             return GridView.builder(
               padding: const EdgeInsets.all(8.0),
@@ -43,50 +43,70 @@ class ProductList extends StatelessWidget {
                 crossAxisSpacing: 8.0,
                 mainAxisSpacing: 8.0,
               ),
-              itemCount: herramientas.length,
+              itemCount: productos.length,
               itemBuilder: (context, index) {
-                final herramienta = herramientas[index];
+                final producto = productos[index];
 
-                return Card(
-                  elevation: 5,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Image.network(
-                        herramienta.foto,
-                        height: 84,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetallesProducto(idProducto: producto.idProducto),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          herramienta.nombre,
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                    );
+                  },
+                  child: Card(
+                    elevation: 5,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Image.network(
+                          producto.foto.isNotEmpty
+                              ? producto.foto
+                              : '',
+                          height: 84,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Image.asset(
+                              'lib/images/placeholder.png',
+                              height: 84,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                            );
+                          },
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            producto.nombre,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Text(
-                          '\$${herramienta.precio.toStringAsFixed(2)}',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.teal,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Text(
+                            '\$${producto.precio.toStringAsFixed(2)}',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.teal,
+                            ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          herramienta.detalle,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            producto.detalle,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 );
               },
