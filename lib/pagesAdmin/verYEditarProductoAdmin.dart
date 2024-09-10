@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../services/firebaseProductos_service.dart'; // Asegúrate de tener el servicio importado
+import '../services/firebaseProductos_service.dart';
+import '../styles/verYEditarProductoAdmin_styles.dart'; // Importar el archivo de estilos
 
 class DetallesProducto extends StatefulWidget {
   final String idProducto; // Recibe solo el ID del producto
@@ -12,6 +13,10 @@ class DetallesProducto extends StatefulWidget {
 
 class _DetallesProductoState extends State<DetallesProducto> {
   late Future<Producto?> _productoFuture;
+  late TextEditingController _nombreController;
+  late TextEditingController _precioController;
+  late TextEditingController _stockController;
+  late TextEditingController _detalleController;
 
   @override
   void initState() {
@@ -19,18 +24,46 @@ class _DetallesProductoState extends State<DetallesProducto> {
     _productoFuture = FirebaseServicioProducto().obtenerProductoPorId(widget.idProducto);
   }
 
+  // Método para inicializar los controladores con los valores del producto
+  void _initializeControllers(Producto producto) {
+    _nombreController = TextEditingController(text: producto.nombre);
+    _precioController = TextEditingController(text: producto.precio.toString());
+    _stockController = TextEditingController(text: producto.stock.toString());
+    _detalleController = TextEditingController(text: producto.detalle);
+  }
+
+  // Método para guardar los cambios (editar el producto)
+  Future<void> _guardarCambios() async {
+    try {
+      await FirebaseServicioProducto().actualizarProducto(
+        idProducto: widget.idProducto,
+        nombre: _nombreController.text,
+        precio: double.parse(_precioController.text),
+        detalle: _detalleController.text,
+        stock: int.parse(_stockController.text),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Producto actualizado exitosamente')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al actualizar el producto')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF318C7A), // Fondo del AppBar
+        backgroundColor: AppStyles.primaryColor,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: AppStyles.textColor),
           onPressed: () => Navigator.of(context).pop(), // Acción para retroceder
         ),
         title: Text(
           'Detalles del Producto',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: AppStyles.textColor),
         ),
       ),
       body: FutureBuilder<Producto?>(
@@ -43,16 +76,12 @@ class _DetallesProductoState extends State<DetallesProducto> {
           }
 
           final producto = snapshot.data!;
+          // Inicializamos los controladores una vez que obtenemos los datos del producto
+          _initializeControllers(producto);
+
           return Container(
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xFF318C7A), // Color #318C7A
-                  Color(0xFF1E293B), // Color #1E293B
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              gradient: AppStyles.gradient, // Aplicar el gradiente
             ),
             child: SafeArea(
               child: Center(
@@ -61,16 +90,9 @@ class _DetallesProductoState extends State<DetallesProducto> {
                   constraints: BoxConstraints(maxWidth: 600),
                   padding: EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Color(0xFF318C7A), // Color #318C7A
-                        Color(0xFF1E293B), // Color #1E293B
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
+                    gradient: AppStyles.gradient, // Aplicar el gradiente
                     borderRadius: BorderRadius.circular(8),
-                    boxShadow: [ // Añade una sombra para un mejor efecto visual
+                    boxShadow: [
                       BoxShadow(
                         color: Colors.black26,
                         blurRadius: 8.0,
@@ -91,7 +113,7 @@ class _DetallesProductoState extends State<DetallesProducto> {
                               image: NetworkImage(
                                 producto.foto.isNotEmpty
                                     ? producto.foto
-                                    : 'https://via.placeholder.com/150',
+                                    : AppStyles.placeholderImage,
                               ),
                               fit: BoxFit.cover,
                             ),
@@ -101,25 +123,23 @@ class _DetallesProductoState extends State<DetallesProducto> {
                       ),
                       Text(
                         'Detalles del Producto',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white, // Color del texto del encabezado
-                        ),
+                        style: AppStyles.titleTextStyle,
                         textAlign: TextAlign.center,
                       ),
                       SizedBox(height: 16),
-                      _buildTextField('ID', producto.idProducto, false), // Solo lectura
-                      _buildTextField('Nombre', producto.nombre, true),
-                      _buildTextField('Precio', producto.precio.toString(), true),
-                      _buildTextField('Cantidad en Stock', producto.stock.toString(), true),
-                      _buildTextField('Descripción', producto.detalle, true),
+                      _buildTextField('ID', producto.idProducto, false, TextEditingController(text: producto.idProducto)),
+                      _buildTextField('Nombre', _nombreController.text, true, _nombreController),
+                      _buildTextField('Precio', _precioController.text, true, _precioController),
+                      _buildTextField('Cantidad en Stock', _stockController.text, true, _stockController),
+                      _buildTextField('Descripción', _detalleController.text, true, _detalleController),
                       SizedBox(height: 24),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          _buildButton('EDITAR'),
-                          _buildButton('HISTORIAL'),
+                          _buildButton('EDITAR', _guardarCambios),
+                          _buildButton('HISTORIAL', () {
+                            // Acción para historial
+                          }),
                         ],
                       ),
                     ],
@@ -133,7 +153,7 @@ class _DetallesProductoState extends State<DetallesProducto> {
     );
   }
 
-  Widget _buildTextField(String label, String value, bool isEditable) {
+  Widget _buildTextField(String label, String value, bool isEditable, TextEditingController controller) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),
       child: Column(
@@ -141,28 +161,24 @@ class _DetallesProductoState extends State<DetallesProducto> {
         children: [
           Text(
             label,
-            style: TextStyle(
-              color: Colors.white, // Color del texto de las etiquetas
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-            ),
+            style: AppStyles.labelTextStyle,
           ),
           SizedBox(height: 4),
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4),
-              border: Border.all(color: Colors.white, width: 1), // Borde blanco
+              border: Border.all(color: AppStyles.textColor, width: 1),
             ),
             child: TextField(
-              controller: TextEditingController(text: value),
+              controller: controller,
               enabled: isEditable,
               decoration: InputDecoration(
-                fillColor: Colors.transparent, // Fondo transparente para el campo de texto
+                fillColor: Colors.transparent,
                 filled: true,
-                border: InputBorder.none, // Sin borde por defecto
+                border: InputBorder.none,
                 contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               ),
-              style: TextStyle(color: Colors.white), // Color del texto en el campo
+              style: AppStyles.textFieldTextStyle,
             ),
           ),
         ],
@@ -170,22 +186,12 @@ class _DetallesProductoState extends State<DetallesProducto> {
     );
   }
 
-  Widget _buildButton(String text) {
+  Widget _buildButton(String text, VoidCallback onPressed) {
     return Expanded(
       child: ElevatedButton(
-        onPressed: () {
-          // Acción para editar o historial
-        },
+        onPressed: onPressed,
         child: Text(text),
-        style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white,
-          backgroundColor: Color(0xFF334155), // Color del botón
-          padding: EdgeInsets.symmetric(vertical: 12), // Ajusta el padding para hacerlo más pequeño
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4),
-          ),
-          textStyle: TextStyle(fontSize: 14), // Ajusta el tamaño del texto
-        ),
+        style: AppStyles.buttonStyle,
       ),
     );
   }

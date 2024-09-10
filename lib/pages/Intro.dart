@@ -1,36 +1,30 @@
 import 'package:flutter/material.dart';
 import './login.dart';
-import './listarProductosAdmin.dart';
+import '../pagesAdmin/listarProductosAdmin.dart';
+import '../styles/intro_styles.dart';  // Importamos la clase con los estilos
 
 class Intro extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF318C7A), Color(0xFF1E293B)],
-          ),
-        ),
+        decoration: Styles.backgroundDecoration,  // Usamos la clase Styles
         child: SafeArea(
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: Styles.padding16,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     IconButton(
-                      icon: Icon(Icons.menu, color: Colors.white),
+                      icon: Styles.menuIcon,
                       onPressed: () {
-                        //Logica menu
+                        // Logica menu
                       },
                     ),
                     IconButton(
-                      //BOTON PERFIL
-                      icon: Icon(Icons.person, color: Colors.white),
+                      icon: Styles.profileIcon,
                       onPressed: () {
                         Navigator.push(
                           context,
@@ -48,21 +42,17 @@ class Intro extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Transform.rotate(
-                        angle: 45 * 3.14159 / 180,
+                        angle: Styles.rotationAngle,
                         child: Container(
                           width: 120,
                           height: 120,
-                          color: Colors.orange,
+                          color: Styles.squareColor,
                           child: Center(
                             child: Transform.rotate(
-                              angle: -45 * 3.14159 / 180,
+                              angle: -Styles.rotationAngle,
                               child: Text(
                                 'Tu Ferretería',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                ),
+                                style: Styles.titleTextStyle,
                                 textAlign: TextAlign.center,
                               ),
                             ),
@@ -78,29 +68,21 @@ class Intro extends StatelessWidget {
                       SizedBox(height: 24),
                       Text(
                         '¡Empieza a comprar!',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: Styles.subtitleTextStyle,
                       ),
                       SizedBox(height: 24),
                       ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.orange,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 32, vertical: 16),
-                        ),
+                        style: Styles.buttonStyle,
                         onPressed: () {
                           Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ProductList()),
-                        );
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProductList()),
+                          );
                         },
                         child: Text(
                           'Ver productos',
-                          style: TextStyle(fontSize: 18),
+                          style: Styles.buttonTextStyle,
                         ),
                       ),
                     ],

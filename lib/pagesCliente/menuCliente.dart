@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import '../services/firebaseUsuario_service.dart'; // Asegúrate de ajustar la ruta correcta de tu servicio
+import '../services/firebaseUsuario_service.dart';
+import '../styles/menuCliente_styles.dart'; // Importa el archivo de estilos
+import '../pages/Intro.dart'; // Importa el archivo que contiene el componente Into
 
 class MenuCliente extends StatefulWidget {
   final String idUsuario; // Recibe el ID del usuario
@@ -36,10 +37,10 @@ class _MenuClienteState extends State<MenuCliente> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.teal,
+        backgroundColor: MenuClienteStyles.appBarColor,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: MenuClienteStyles.textColor),
           onPressed: () {
             Navigator.of(context).pop(); // Función para retroceder
           },
@@ -49,11 +50,7 @@ class _MenuClienteState extends State<MenuCliente> {
           ? Center(child: CircularProgressIndicator()) // Indicador de carga
           : Container(
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Color(0xFF318C7A), Color(0xFF1E293B)],
-                ),
+                gradient: MenuClienteStyles.backgroundGradient, // Aplicar el gradiente
               ),
               child: Center(
                 child: Column(
@@ -64,18 +61,14 @@ class _MenuClienteState extends State<MenuCliente> {
                       radius: 50,
                       backgroundImage: usuario != null && usuario!.imagen.isNotEmpty
                           ? NetworkImage(usuario!.imagen)
-                          : AssetImage('assets/placeholder.png') as ImageProvider, // Imagen por defecto si no tiene una imagen de usuario
+                          : AssetImage(MenuClienteStyles.placeholderImage) as ImageProvider, // Imagen por defecto si no tiene una imagen de usuario
                       backgroundColor: Colors.white,
                     ),
                     SizedBox(height: 16),
                     // Título "MENU"
                     Text(
                       'MENU',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                      style: MenuClienteStyles.titleTextStyle,
                     ),
                     SizedBox(height: 24),
                     // Botones
@@ -89,7 +82,10 @@ class _MenuClienteState extends State<MenuCliente> {
                       print('Historial de Pagos');
                     }),
                     _buildButton(context, 'Salir', () {
-                      print('Salir');
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => Intro()), // Reemplaza con el componente deseado
+                      );
                     }),
                   ],
                 ),
@@ -103,17 +99,11 @@ class _MenuClienteState extends State<MenuCliente> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white, backgroundColor: Color(0xFF1E293B),
-          padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
+        style: MenuClienteStyles.buttonStyle,
         onPressed: onPressed,
         child: Text(
           text,
-          style: TextStyle(fontSize: 16),
+          style: MenuClienteStyles.buttonTextStyle,
         ),
       ),
     );

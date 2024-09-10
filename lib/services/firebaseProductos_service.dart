@@ -60,6 +60,28 @@ class FirebaseServicioProducto {
       print('Error al crear producto: $e');
     }
   }
+
+  // Método para actualizar un producto por su ID (sin modificar el ID)
+  Future<void> actualizarProducto({
+    required String idProducto,
+    required String nombre,
+    required double precio,
+    required String detalle,
+    required int stock,
+  }) async {
+    try {
+      // Actualizamos solo los campos especificados, sin cambiar el ID
+      await productoCollection.doc(idProducto).update({
+        'Nombre': nombre,
+        'Precio': precio,
+        'Detalle': detalle,
+        'Stock': stock,
+      });
+      print('Producto con ID $idProducto actualizado exitosamente.');
+    } catch (e) {
+      print('Error al actualizar el producto: $e');
+    }
+  }
 }
 
 // Modelo de datos de Producto

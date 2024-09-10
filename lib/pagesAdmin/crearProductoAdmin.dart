@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/firebaseProductos_service.dart'; // Importar el servicio que contiene la función crearProducto
+import '../styles/crearProductoAdmin_styles.dart';
 
 class NuevoProductoScreen extends StatefulWidget {
   @override
@@ -19,7 +20,7 @@ class _NuevoProductoScreenState extends State<NuevoProductoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF318C7A),
+        backgroundColor: AppStyles.primaryColor,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -29,13 +30,7 @@ class _NuevoProductoScreenState extends State<NuevoProductoScreen> {
         title: Text('Nuevo Producto'),
       ),
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFF318C7A), Color(0xFF1E293B)], // Fondo degradado
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
+        decoration: AppStyles.gradientBackground,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: SingleChildScrollView(
@@ -48,113 +43,52 @@ class _NuevoProductoScreenState extends State<NuevoProductoScreen> {
                       Container(
                         width: 100,
                         height: 100,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          shape: BoxShape.circle,
-                        ),
+                        decoration: AppStyles.circleBoxDecoration,
                         child: Icon(Icons.add, size: 50, color: Colors.grey[600]),
                       ),
                       SizedBox(height: 16),
-                      Text(
-                        'Nuevo Producto',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white, // Cambiado a blanco para que contraste
-                        ),
-                      ),
+                      Text('Nuevo Producto', style: AppStyles.titleStyle),
                     ],
                   ),
                 ),
                 SizedBox(height: 20),
                 TextField(
                   controller: _nombreController,
-                  decoration: InputDecoration(
-                    labelText: 'Nombre',
-                    labelStyle: TextStyle(color: Colors.white),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                  ),
-                  style: TextStyle(color: Colors.white), // Texto en blanco
+                  decoration: AppStyles.inputDecoration.copyWith(labelText: 'Nombre'),
+                  style: AppStyles.inputTextStyle,
                 ),
                 SizedBox(height: 16),
                 TextField(
                   controller: _precioController,
-                  decoration: InputDecoration(
-                    labelText: 'Precio',
-                    labelStyle: TextStyle(color: Colors.white),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                  ),
-                  style: TextStyle(color: Colors.white),
+                  decoration: AppStyles.inputDecoration.copyWith(labelText: 'Precio'),
+                  style: AppStyles.inputTextStyle,
                   keyboardType: TextInputType.number,
                 ),
                 SizedBox(height: 16),
                 TextField(
                   controller: _stockController,
-                  decoration: InputDecoration(
-                    labelText: 'Cantidad',
-                    labelStyle: TextStyle(color: Colors.white),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                  ),
-                  style: TextStyle(color: Colors.white),
+                  decoration: AppStyles.inputDecoration.copyWith(labelText: 'Cantidad'),
+                  style: AppStyles.inputTextStyle,
                   keyboardType: TextInputType.number,
                 ),
                 SizedBox(height: 16),
                 TextField(
                   controller: _descripcionController,
-                  decoration: InputDecoration(
-                    labelText: 'Descripción',
-                    labelStyle: TextStyle(color: Colors.white),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                  ),
-                  style: TextStyle(color: Colors.white),
+                  decoration: AppStyles.inputDecoration.copyWith(labelText: 'Descripción'),
+                  style: AppStyles.inputTextStyle,
                   maxLines: 3,
                 ),
                 SizedBox(height: 16),
                 TextField(
                   controller: _fotoController,
-                  decoration: InputDecoration(
-                    labelText: 'URL Imagen',
-                    labelStyle: TextStyle(color: Colors.white),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                  ),
-                  style: TextStyle(color: Colors.white),
+                  decoration: AppStyles.inputDecoration.copyWith(labelText: 'URL Imagen'),
+                  style: AppStyles.inputTextStyle,
                 ),
                 SizedBox(height: 32),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF334155),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.zero, // Sin bordes redondeados
-                      ),
-                      textStyle: TextStyle(color: Colors.white), // Letras blancas
-                    ),
+                    style: AppStyles.buttonStyle,
                     onPressed: () {
                       // Validamos que los campos no estén vacíos antes de enviar los datos
                       if (_nombreController.text.isNotEmpty &&
