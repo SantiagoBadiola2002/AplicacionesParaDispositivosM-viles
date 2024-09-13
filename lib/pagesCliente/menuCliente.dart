@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../services/firebaseUsuario_service.dart';
 import '../styles/menuCliente_styles.dart'; // Importa el archivo de estilos
 import '../pages/Intro.dart'; // Importa el archivo que contiene el componente Into
+import '../pagesCliente/listarProductosCliente.dart';
+import './verCarritoCliente.dart';
 
 class MenuCliente extends StatefulWidget {
   final String idUsuario; // Recibe el ID del usuario
@@ -73,19 +75,31 @@ class _MenuClienteState extends State<MenuCliente> {
                     SizedBox(height: 24),
                     // Botones
                     _buildButton(context, 'Listar Productos', () {
-                      print('Listar Productos');
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  ProductListCliente()), // Navegar a la pantalla de ProductList
+                        );
                     }),
                     _buildButton(context, 'Carrito', () {
-                      print('Carrito');
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  CartScreen()), // Navegar a la pantalla de ProductList
+                        );
                     }),
                     _buildButton(context, 'Historial de Pagos', () {
-                      print('Historial de Pagos');
+                      
                     }),
                     _buildButton(context, 'Salir', () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => Intro()), // Reemplaza con el componente deseado
-                      );
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  Intro()), // Navegar a la pantalla de ProductList
+                        );
                     }),
                   ],
                 ),
