@@ -2,11 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import '../services/carrito_service.dart'; // Importa el servicio de carrito
 import '../services/firebaseProductos_service.dart'; // Importa el servicio de productos
+import '../services/firebaseUsuario_service.dart';
+import '../services/firebasePagos_service.dart';
 import '../styles/verCarritoCliente_style.dart';  // Importa el archivo de estilos
 
 class CartScreen extends StatefulWidget {
   @override
   _CartScreenState createState() => _CartScreenState();
+
+
+  final Usuario usuario; // Recibe los datos del usuario
+
+  CartScreen({required this.usuario});
 }
 
 class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
@@ -128,25 +135,71 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
                         ],
                       ),
                     ),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Acción al presionar el botón COMPRAR
-                      },
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.shopping_cart),
-                          SizedBox(width: 8),
-                          Text('COMPRAR'),
-                        ],
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: AppStyles.primaryColor,
-                        backgroundColor: AppStyles.whiteColor,
-                        padding: EdgeInsets.symmetric(vertical: 16),
-                        textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ),
+                    // Dentro del método onPressed del botón COMPRAR
+ElevatedButton(
+  onPressed: () async {
+    if (_cartItems.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('El carrito está vacío')),
+      );
+      return;
+    }
+
+    final total = _totalPrice;
+    final productos = _cartItems.entries.map((entry) {
+      final producto = _productos[entry.key];
+      return {
+        'IDProducto': entry.key,
+        'Nombre': producto?.nombre,
+        'Cantidad': entry.value,
+        'Precio': producto?.precio,
+      };
+    }).toList();
+
+    final pagoService = FirebaseServicioPago();
+
+    try {
+      await pagoService.registrarPago(
+        idUsuario: widget.usuario.idUsuario,
+        nombreCliente: widget.usuario.nombre,
+        total: total,
+        productos: productos,
+      );
+      
+      // Limpiar el carrito después de la compra
+      await _clearCart();
+      
+      // Mostrar mensaje de éxito
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Compra realizada exitosamente')),
+      );
+      
+      // Redirigir o actualizar la vista según sea necesario
+    } catch (e) {
+      print('Error al registrar el pago: $e');
+      // Mostrar mensaje de error
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al realizar la compra')),
+      );
+    }
+  },
+  child: Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Icon(Icons.shopping_cart),
+      SizedBox(width: 8),
+      Text('COMPRAR'),
+    ],
+  ),
+  style: ElevatedButton.styleFrom(
+    foregroundColor: AppStyles.primaryColor,
+    backgroundColor: AppStyles.whiteColor,
+    padding: EdgeInsets.symmetric(vertical: 16),
+    textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+  ),
+),
+
+
                     SizedBox(height: 16),
                   ],
                 ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/firebaseProductos_service.dart';
+import '../pagesAdmin/verRegistroPagosProductoAdmin.dart';
 import '../styles/verYEditarProductoAdmin_styles.dart'; // Importar el archivo de estilos
 
 class DetallesProducto extends StatefulWidget {
@@ -21,7 +22,8 @@ class _DetallesProductoState extends State<DetallesProducto> {
   @override
   void initState() {
     super.initState();
-    _productoFuture = FirebaseServicioProducto().obtenerProductoPorId(widget.idProducto);
+    _productoFuture =
+        FirebaseServicioProducto().obtenerProductoPorId(widget.idProducto);
   }
 
   // Método para inicializar los controladores con los valores del producto
@@ -59,7 +61,8 @@ class _DetallesProductoState extends State<DetallesProducto> {
         backgroundColor: AppStyles.primaryColor,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: AppStyles.textColor),
-          onPressed: () => Navigator.of(context).pop(), // Acción para retroceder
+          onPressed: () =>
+              Navigator.of(context).pop(), // Acción para retroceder
         ),
         title: Text(
           'Detalles del Producto',
@@ -127,18 +130,31 @@ class _DetallesProductoState extends State<DetallesProducto> {
                         textAlign: TextAlign.center,
                       ),
                       SizedBox(height: 16),
-                      _buildTextField('ID', producto.idProducto, false, TextEditingController(text: producto.idProducto)),
-                      _buildTextField('Nombre', _nombreController.text, true, _nombreController),
-                      _buildTextField('Precio', _precioController.text, true, _precioController),
-                      _buildTextField('Cantidad en Stock', _stockController.text, true, _stockController),
-                      _buildTextField('Descripción', _detalleController.text, true, _detalleController),
+                      _buildTextField('ID', producto.idProducto, false,
+                          TextEditingController(text: producto.idProducto)),
+                      _buildTextField('Nombre', _nombreController.text, true,
+                          _nombreController),
+                      _buildTextField('Precio', _precioController.text, true,
+                          _precioController),
+                      _buildTextField('Cantidad en Stock',
+                          _stockController.text, true, _stockController),
+                      _buildTextField('Descripción', _detalleController.text,
+                          true, _detalleController),
                       SizedBox(height: 24),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           _buildButton('EDITAR', _guardarCambios),
                           _buildButton('HISTORIAL', () {
-                            // Acción para historial
+                            // Acción para historial: navegar al widget de historial
+                            print('Navegando al historial de compras del producto con ID: ${widget.idProducto}');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => HistorialCompras(
+                                    idProducto: widget.idProducto),
+                              ),
+                            );
                           }),
                         ],
                       ),
@@ -153,7 +169,8 @@ class _DetallesProductoState extends State<DetallesProducto> {
     );
   }
 
-  Widget _buildTextField(String label, String value, bool isEditable, TextEditingController controller) {
+  Widget _buildTextField(String label, String value, bool isEditable,
+      TextEditingController controller) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),
       child: Column(
@@ -176,7 +193,8 @@ class _DetallesProductoState extends State<DetallesProducto> {
                 fillColor: Colors.transparent,
                 filled: true,
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               ),
               style: AppStyles.textFieldTextStyle,
             ),

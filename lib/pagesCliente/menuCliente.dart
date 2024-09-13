@@ -27,7 +27,8 @@ class _MenuClienteState extends State<MenuCliente> {
   // Método para cargar los datos del usuario
   Future<void> _cargarDatosUsuario() async {
     final firebaseServicio = FirebaseServicioUsuario();
-    Usuario? user = await firebaseServicio.obtenerUsuarioPorId(widget.idUsuario);
+    Usuario? user =
+        await firebaseServicio.obtenerUsuarioPorId(widget.idUsuario);
 
     setState(() {
       usuario = user;
@@ -52,7 +53,8 @@ class _MenuClienteState extends State<MenuCliente> {
           ? Center(child: CircularProgressIndicator()) // Indicador de carga
           : Container(
               decoration: BoxDecoration(
-                gradient: MenuClienteStyles.backgroundGradient, // Aplicar el gradiente
+                gradient: MenuClienteStyles
+                    .backgroundGradient, // Aplicar el gradiente
               ),
               child: Center(
                 child: Column(
@@ -61,9 +63,11 @@ class _MenuClienteState extends State<MenuCliente> {
                     // Imagen de perfil
                     CircleAvatar(
                       radius: 50,
-                      backgroundImage: usuario != null && usuario!.imagen.isNotEmpty
+                      backgroundImage: usuario != null &&
+                              usuario!.imagen.isNotEmpty
                           ? NetworkImage(usuario!.imagen)
-                          : AssetImage(MenuClienteStyles.placeholderImage) as ImageProvider, // Imagen por defecto si no tiene una imagen de usuario
+                          : AssetImage(MenuClienteStyles.placeholderImage)
+                              as ImageProvider, // Imagen por defecto si no tiene una imagen de usuario
                       backgroundColor: Colors.white,
                     ),
                     SizedBox(height: 16),
@@ -76,30 +80,28 @@ class _MenuClienteState extends State<MenuCliente> {
                     // Botones
                     _buildButton(context, 'Listar Productos', () {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  ProductListCliente()), // Navegar a la pantalla de ProductList
-                        );
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                ProductListCliente()), // Navegar a la pantalla de ProductList
+                      );
                     }),
                     _buildButton(context, 'Carrito', () {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  CartScreen()), // Navegar a la pantalla de ProductList
-                        );
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CartScreen(usuario: usuario!),
+                        ),
+                      );
                     }),
-                    _buildButton(context, 'Historial de Pagos', () {
-                      
-                    }),
+                    _buildButton(context, 'Historial de Pagos', () {}),
                     _buildButton(context, 'Salir', () {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  Intro()), // Navegar a la pantalla de ProductList
-                        );
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                Intro()), // Navegar a la pantalla de ProductList
+                      );
                     }),
                   ],
                 ),
@@ -109,7 +111,8 @@ class _MenuClienteState extends State<MenuCliente> {
   }
 
   // Método para crear los botones
-  Widget _buildButton(BuildContext context, String text, VoidCallback onPressed) {
+  Widget _buildButton(
+      BuildContext context, String text, VoidCallback onPressed) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: ElevatedButton(
