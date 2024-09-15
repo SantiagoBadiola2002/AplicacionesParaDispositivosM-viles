@@ -75,14 +75,15 @@ class Intro extends StatelessWidget {
                       ElevatedButton(
                         style: Styles.buttonStyle,
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ProductList()),
-                          );
-                        },
+                        print('Llendo a login.dart desde Into');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LoginScreen()),
+                        );
+                      },
                         child: Text(
-                          'Ver productos',
+                          'Ingresar',
                           style: Styles.buttonTextStyle,
                         ),
                       ),

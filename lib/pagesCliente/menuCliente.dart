@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import '../services/firebaseUsuario_service.dart';
 import '../styles/menuCliente_styles.dart'; // Importa el archivo de estilos
-import '../pages/Intro.dart'; // Importa el archivo que contiene el componente Into
+import '../pages/Intro.dart'; // Importa el archivo que contiene el componente Intro
 import '../pagesCliente/listarProductosCliente.dart';
 import './verCarritoCliente.dart';
+import '../pagesCliente/historialComprasCliente.dart';
 
 class MenuCliente extends StatefulWidget {
   final String idUsuario; // Recibe el ID del usuario
@@ -27,20 +28,25 @@ class _MenuClienteState extends State<MenuCliente> {
   // Método para cargar los datos del usuario
   Future<void> _cargarDatosUsuario() async {
     final firebaseServicio = FirebaseServicioUsuario();
-    Usuario? user =
-        await firebaseServicio.obtenerUsuarioPorId(widget.idUsuario);
-
-    setState(() {
-      usuario = user;
-      isLoading = false;
-    });
+    try {
+      Usuario? user = await firebaseServicio.obtenerUsuarioPorId(widget.idUsuario);
+      setState(() {
+        usuario = user;
+        isLoading = false;
+      });
+    } catch (e) {
+      print('Error al cargar los datos del usuario: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: isLoading
-          ? Center(child: CircularProgressIndicator()) // Indicador de carga
+          ? const Center(child: CircularProgressIndicator()) // Indicador de carga
           : Container(
               decoration: BoxDecoration(
                 gradient: MenuClienteStyles
@@ -53,20 +59,18 @@ class _MenuClienteState extends State<MenuCliente> {
                     // Imagen de perfil
                     CircleAvatar(
                       radius: 50,
-                      backgroundImage: usuario != null &&
-                              usuario!.imagen.isNotEmpty
+                      backgroundImage: usuario != null && usuario!.imagen.isNotEmpty
                           ? NetworkImage(usuario!.imagen)
-                          : AssetImage(MenuClienteStyles.placeholderImage)
-                              as ImageProvider, // Imagen por defecto si no tiene una imagen de usuario
+                          : AssetImage(MenuClienteStyles.placeholderImage) as ImageProvider,
                       backgroundColor: Colors.white,
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     // Título "MENU"
                     Text(
                       'MENU',
                       style: MenuClienteStyles.titleTextStyle,
                     ),
-                    SizedBox(height: 24),
+                    const SizedBox(height: 24),
                     // Botones
                     _buildButton(context, 'Listar Productos', () {
                       print('Llendo a listarProductosCliente');
@@ -74,26 +78,38 @@ class _MenuClienteState extends State<MenuCliente> {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                ProductListCliente()), // Navegar a la pantalla de ProductList
+                                 ProductListCliente()), // Ir a la lista de productos
                       );
                     }),
                     _buildButton(context, 'Carrito', () {
                       print('Llendo a verCarritoCliente');
+                      if (usuario != null) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CartScreen(usuario: usuario!), // Pasar el objeto completo si está disponible
+                          ),
+                        );
+                      } else {
+                        print('Error: usuario es null');
+                      }
+                    }),
+                    _buildButton(context, 'Historial de Pagos', () {
+                      print('Llendo a historialComprasCliente');
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => CartScreen(usuario: usuario!),
+                          builder: (context) => HistorialComprasPage(idUsuario: widget.idUsuario), // Enviar solo el idUsuario
                         ),
                       );
                     }),
-                    _buildButton(context, 'Historial de Pagos', () {}),
                     _buildButton(context, 'Salir', () {
                       print('Salir');
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                Intro()), // Navegar a la pantalla de ProductList
+                                 Intro()), // Regresar a la pantalla de intro
                       );
                     }),
                   ],

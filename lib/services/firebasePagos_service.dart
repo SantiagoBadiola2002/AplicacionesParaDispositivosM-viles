@@ -4,37 +4,60 @@ import 'package:intl/intl.dart';
 class FirebaseServicioPago {
   final CollectionReference pagosCollection = FirebaseFirestore.instance.collection('Pago');
 
-  // Registrar un nuevo pago
-  Future<void> registrarPago({
-    required String idUsuario,
-    required String nombreCliente,
-    required double total,
-    required List<Map<String, dynamic>> productos, // Lista de productos con IDProducto, Nombre, Cantidad y Precio
-  }) async {
-    try {
-      await pagosCollection.add({
-        'IDUsuario': idUsuario,
-        'NombreCliente': nombreCliente,
-        'Fecha': Timestamp.now(),  // Fecha actual del pago
-        'Total': total,
-        'Productos': productos,  // Array de productos comprados
-      });
-      print('Pago registrado exitosamente.');
-    } catch (e) {
-      print('Error al registrar pago: $e');
-    }
+// Registrar un nuevo pago
+Future<void> registrarPago({
+  required String idUsuario,
+  required String nombreCliente,
+  required double total,
+  required List<Map<String, dynamic>> productos, // Lista de productos con IDProducto, Nombre, Cantidad, Precio y Foto (URL)
+}) async {
+  try {
+    // Registrar el pago en la colección de pagos
+    await pagosCollection.add({
+      'IDUsuario': idUsuario,
+      'NombreCliente': nombreCliente,
+      'Fecha': Timestamp.now(),  // Fecha actual del pago
+      'Total': total,
+      'Productos': productos.map((producto) => {
+        'IDProducto': producto['IDProducto'],
+        'Nombre': producto['Nombre'],
+        'Cantidad': producto['Cantidad'],
+        'Precio': producto['Precio'],
+        'Foto': producto['Foto'],  
+      }).toList(),  // Convierte el mapa de productos a una lista de mapas
+    });
+    print('Pago registrado exitosamente.');
+  } catch (e) {
+    print('Error al registrar pago: $e');
+  }
+}
+
+
+ // Obtener el historial de pagos de un cliente específico sin usar un índice compuesto
+  Future<List<Map<String, dynamic>>> obtenerHistorialPagosCliente(String idUsuario) async {
+  if (idUsuario.isEmpty) {
+    print('Error: ID de usuario no puede estar vacío.');
+    return [];
   }
 
-  // Obtener el historial de pagos de un cliente específico
-  Future<List<Map<String, dynamic>>> obtenerHistorialPagosCliente(String idUsuario) async {
-    try {
-      QuerySnapshot snapshot = await pagosCollection.where('IDUsuario', isEqualTo: idUsuario).get();
-      return snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
-    } catch (e) {
-      print('Error al obtener historial de pagos del cliente: $e');
-      return [];
-    }
+  try {
+    QuerySnapshot snapshot = await pagosCollection
+      .where('IDUsuario', isEqualTo: idUsuario)
+      .get();
+      
+    // Mapeamos los datos incluyendo el ID del documento
+    return snapshot.docs.map((doc) {
+      var data = doc.data() as Map<String, dynamic>;
+      data['ID'] = doc.id; // Asignar el ID del documento
+      return data;
+    }).toList();
+  } catch (e) {
+    print('Error al obtener historial de pagos del cliente: $e');
+    return [];
   }
+}
+
+
 
  // Obtener el historial de compras de un producto específico
 Future<List<Map<String, dynamic>>> obtenerHistorialComprasProducto(String idProducto) async {

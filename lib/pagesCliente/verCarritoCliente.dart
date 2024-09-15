@@ -153,6 +153,7 @@ ElevatedButton(
         'Nombre': producto?.nombre,
         'Cantidad': entry.value,
         'Precio': producto?.precio,
+        'Foto': producto?.foto,
       };
     }).toList();
 

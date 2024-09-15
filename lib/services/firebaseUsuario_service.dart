@@ -111,4 +111,6 @@ class Usuario {
       imagen: data['Imagen'] ?? '', // Se añade la lectura del campo imagen
     );
   }
+
+  get id => null;
 }

@@ -33,94 +33,101 @@ class _NuevoProductoScreenState extends State<NuevoProductoScreen> {
         decoration: AppStyles.gradientBackground,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Column(
+                  children: [
+                    Container(
+                      width: 100,
+                      height: 100,
+                      decoration: AppStyles.circleBoxDecoration,
+                      child: Icon(Icons.add, size: 50, color: Colors.grey[600]),
+                    ),
+                    SizedBox(height: 16),
+                    Text('Nuevo Producto', style: AppStyles.titleStyle),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20),
+              Expanded(
+                child: SingleChildScrollView(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        width: 100,
-                        height: 100,
-                        decoration: AppStyles.circleBoxDecoration,
-                        child: Icon(Icons.add, size: 50, color: Colors.grey[600]),
+                      TextField(
+                        controller: _nombreController,
+                        decoration: AppStyles.inputDecoration.copyWith(labelText: 'Nombre'),
+                        style: AppStyles.inputTextStyle,
                       ),
                       SizedBox(height: 16),
-                      Text('Nuevo Producto', style: AppStyles.titleStyle),
+                      TextField(
+                        controller: _precioController,
+                        decoration: AppStyles.inputDecoration.copyWith(labelText: 'Precio'),
+                        style: AppStyles.inputTextStyle,
+                        keyboardType: TextInputType.number,
+                      ),
+                      SizedBox(height: 16),
+                      TextField(
+                        controller: _stockController,
+                        decoration: AppStyles.inputDecoration.copyWith(labelText: 'Cantidad'),
+                        style: AppStyles.inputTextStyle,
+                        keyboardType: TextInputType.number,
+                      ),
+                      SizedBox(height: 16),
+                      TextField(
+                        controller: _descripcionController,
+                        decoration: AppStyles.inputDecoration.copyWith(labelText: 'Descripción'),
+                        style: AppStyles.inputTextStyle,
+                        maxLines: 3,
+                      ),
+                      SizedBox(height: 16),
+                      TextField(
+                        controller: _fotoController,
+                        decoration: AppStyles.inputDecoration.copyWith(labelText: 'URL Imagen'),
+                        style: AppStyles.inputTextStyle,
+                      ),
+                      SizedBox(height: 32),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          style: AppStyles.buttonStyle,
+                          onPressed: () {
+                            // Validamos que los campos no estén vacíos antes de enviar los datos
+                            if (_nombreController.text.isNotEmpty &&
+                                _precioController.text.isNotEmpty &&
+                                _stockController.text.isNotEmpty &&
+                                _descripcionController.text.isNotEmpty &&
+                                _fotoController.text.isNotEmpty) {
+                              _productoService.crearProducto(
+                                nombre: _nombreController.text,
+                                foto: _fotoController.text,
+                                precio: double.parse(_precioController.text),
+                                detalle: _descripcionController.text,
+                                stock: int.parse(_stockController.text),
+                              );
+
+                              // Mostrar mensaje de éxito
+                              print('Producto creado con éxito');
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Producto creado con éxito')),
+                              );
+                            } else {
+                              // Mostrar mensaje de error si falta algún campo
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Por favor, llena todos los campos')),
+                              );
+                            }
+                          },
+                          child: Text('Registrar Producto', style: TextStyle(color: Colors.white)),
+                        ),
+                      ),
                     ],
                   ),
                 ),
-                SizedBox(height: 20),
-                TextField(
-                  controller: _nombreController,
-                  decoration: AppStyles.inputDecoration.copyWith(labelText: 'Nombre'),
-                  style: AppStyles.inputTextStyle,
-                ),
-                SizedBox(height: 16),
-                TextField(
-                  controller: _precioController,
-                  decoration: AppStyles.inputDecoration.copyWith(labelText: 'Precio'),
-                  style: AppStyles.inputTextStyle,
-                  keyboardType: TextInputType.number,
-                ),
-                SizedBox(height: 16),
-                TextField(
-                  controller: _stockController,
-                  decoration: AppStyles.inputDecoration.copyWith(labelText: 'Cantidad'),
-                  style: AppStyles.inputTextStyle,
-                  keyboardType: TextInputType.number,
-                ),
-                SizedBox(height: 16),
-                TextField(
-                  controller: _descripcionController,
-                  decoration: AppStyles.inputDecoration.copyWith(labelText: 'Descripción'),
-                  style: AppStyles.inputTextStyle,
-                  maxLines: 3,
-                ),
-                SizedBox(height: 16),
-                TextField(
-                  controller: _fotoController,
-                  decoration: AppStyles.inputDecoration.copyWith(labelText: 'URL Imagen'),
-                  style: AppStyles.inputTextStyle,
-                ),
-                SizedBox(height: 32),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: AppStyles.buttonStyle,
-                    onPressed: () {
-                      // Validamos que los campos no estén vacíos antes de enviar los datos
-                      if (_nombreController.text.isNotEmpty &&
-                          _precioController.text.isNotEmpty &&
-                          _stockController.text.isNotEmpty &&
-                          _descripcionController.text.isNotEmpty &&
-                          _fotoController.text.isNotEmpty) {
-                        _productoService.crearProducto(
-                          nombre: _nombreController.text,
-                          foto: _fotoController.text,
-                          precio: double.parse(_precioController.text),
-                          detalle: _descripcionController.text,
-                          stock: int.parse(_stockController.text),
-                        );
-
-                        // Mostrar mensaje de éxito
-                        print('Producto creado con éxito');
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Producto creado con éxito')),
-                        );
-                      } else {
-                        // Mostrar mensaje de error si falta algún campo
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Por favor, llena todos los campos')),
-                        );
-                      }
-                    },
-                    child: Text('Registrar Producto', style: TextStyle(color: Colors.white)),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
