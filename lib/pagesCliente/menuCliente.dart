@@ -39,16 +39,6 @@ class _MenuClienteState extends State<MenuCliente> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: MenuClienteStyles.appBarColor,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: MenuClienteStyles.textColor),
-          onPressed: () {
-            Navigator.of(context).pop(); // Función para retroceder
-          },
-        ),
-      ),
       body: isLoading
           ? Center(child: CircularProgressIndicator()) // Indicador de carga
           : Container(
@@ -79,6 +69,7 @@ class _MenuClienteState extends State<MenuCliente> {
                     SizedBox(height: 24),
                     // Botones
                     _buildButton(context, 'Listar Productos', () {
+                      print('Llendo a listarProductosCliente');
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -87,6 +78,7 @@ class _MenuClienteState extends State<MenuCliente> {
                       );
                     }),
                     _buildButton(context, 'Carrito', () {
+                      print('Llendo a verCarritoCliente');
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -96,6 +88,7 @@ class _MenuClienteState extends State<MenuCliente> {
                     }),
                     _buildButton(context, 'Historial de Pagos', () {}),
                     _buildButton(context, 'Salir', () {
+                      print('Salir');
                       Navigator.push(
                         context,
                         MaterialPageRoute(

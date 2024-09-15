@@ -26,6 +26,7 @@ class Intro extends StatelessWidget {
                     IconButton(
                       icon: Styles.profileIcon,
                       onPressed: () {
+                        print('Llendo a login.dart desde Into');
                         Navigator.push(
                           context,
                           MaterialPageRoute(

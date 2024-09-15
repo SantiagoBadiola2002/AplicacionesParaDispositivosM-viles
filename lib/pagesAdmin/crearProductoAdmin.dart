@@ -105,6 +105,7 @@ class _NuevoProductoScreenState extends State<NuevoProductoScreen> {
                         );
 
                         // Mostrar mensaje de éxito
+                        print('Producto creado con éxito');
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text('Producto creado con éxito')),
                         );

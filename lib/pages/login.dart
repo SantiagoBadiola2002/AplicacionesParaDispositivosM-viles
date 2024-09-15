@@ -66,6 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       String rol = userData['Rol'];
 
                       if (rol == 'Administrador') {
+                        print('Llendo a menuAdmin');
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
@@ -74,6 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         );
                       } else if (rol == 'Cliente') {
+                        print('Llendo a menuCliente');
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(

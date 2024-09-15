@@ -38,6 +38,7 @@ class ProductList extends StatelessWidget {
 
                 return GestureDetector(
                   onTap: () {
+                    print('Llendo a detallesProducto');
                     Navigator.push(
                       context,
                       MaterialPageRoute(

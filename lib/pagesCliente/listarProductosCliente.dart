@@ -40,6 +40,7 @@ class ProductListCliente extends StatelessWidget {
                 return GestureDetector(
                   onTap: () {
                     // Al hacer clic, navega a ProductDetailsClient pasando el id del producto
+                     print('Llendo a verProductoCliente');
                     Navigator.push(
                       context,
                       MaterialPageRoute(

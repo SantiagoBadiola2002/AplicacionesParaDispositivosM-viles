@@ -36,7 +36,6 @@ class _MenuAdminState extends State<MenuAdmin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppStyles.appBar,
       body: Container(
         decoration: AppStyles.gradientBackground,
         child: usuario == null
@@ -81,7 +80,7 @@ class _MenuAdminState extends State<MenuAdmin> {
                     // Botón Listar Productos
                     ElevatedButton(
                       onPressed: () {
-                        print('Listar Productos');
+                        print('Llendo a listarProductosAdmin');
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -96,6 +95,7 @@ class _MenuAdminState extends State<MenuAdmin> {
                     // Botón Salir
                     ElevatedButton(
                       onPressed: () {
+                        print('Salir');
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => Intro()),

@@ -204,8 +204,9 @@ class _SignUpPageState extends State<SignUpPage> {
                             try {
                               // Llamamos al servicio para registrar al usuario
                               await servicioUsuario.registrarUsuario(nombre, email, contrasenia, imagenUrl);
+                              print('Usuario registrado${nombre}correctamente');
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Usuario registrado correctamente')),
+                                SnackBar(content: Text('Usuario registrado${nombre}correctamente')),
                               );
 
                               // Redirigir a otra pantalla si es necesario
