@@ -29,8 +29,7 @@ class _MenuClienteState extends State<MenuCliente> {
   Future<void> _cargarDatosUsuario() async {
     final firebaseServicio = FirebaseServicioUsuario();
     try {
-      Usuario? user =
-          await firebaseServicio.obtenerUsuarioPorId(widget.idUsuario);
+      Usuario? user = await firebaseServicio.obtenerUsuarioPorId(widget.idUsuario);
       setState(() {
         usuario = user;
         isLoading = false;
@@ -47,8 +46,7 @@ class _MenuClienteState extends State<MenuCliente> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: isLoading
-          ? const Center(
-              child: CircularProgressIndicator()) // Indicador de carga
+          ? const Center(child: CircularProgressIndicator()) // Indicador de carga
           : Container(
               decoration: BoxDecoration(
                 gradient: MenuClienteStyles
@@ -61,11 +59,9 @@ class _MenuClienteState extends State<MenuCliente> {
                     // Imagen de perfil
                     CircleAvatar(
                       radius: 50,
-                      backgroundImage:
-                          usuario != null && usuario!.imagen.isNotEmpty
-                              ? NetworkImage(usuario!.imagen)
-                              : AssetImage(MenuClienteStyles.placeholderImage)
-                                  as ImageProvider,
+                      backgroundImage: usuario != null && usuario!.imagen.isNotEmpty
+                          ? NetworkImage(usuario!.imagen)
+                          : AssetImage(MenuClienteStyles.placeholderImage) as ImageProvider,
                       backgroundColor: Colors.white,
                     ),
                     const SizedBox(height: 16),
@@ -78,19 +74,12 @@ class _MenuClienteState extends State<MenuCliente> {
                     // Botones
                     _buildButton(context, 'Listar Productos', () {
                       print('Llendo a listarProductosCliente');
-                      if (usuario != null) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ProductListCliente(
-                              usuario:
-                                  usuario!, // Pasas el usuario que ya fue cargado
-                            ),
-                          ),
-                        );
-                      } else {
-                        print('Error: usuario es null');
-                      }
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                 ProductListCliente()), // Ir a la lista de productos
+                      );
                     }),
                     _buildButton(context, 'Carrito', () {
                       print('Llendo a verCarritoCliente');
@@ -98,9 +87,7 @@ class _MenuClienteState extends State<MenuCliente> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => CartScreen(
-                                usuario:
-                                    usuario!), // Pasar el objeto completo si está disponible
+                            builder: (context) => CartScreen(usuario: usuario!), // Pasar el objeto completo si está disponible
                           ),
                         );
                       } else {
@@ -112,9 +99,7 @@ class _MenuClienteState extends State<MenuCliente> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => HistorialComprasPage(
-                              idUsuario:
-                                  widget.idUsuario), // Enviar solo el idUsuario
+                          builder: (context) => HistorialComprasPage(idUsuario: widget.idUsuario), // Enviar solo el idUsuario
                         ),
                       );
                     }),
@@ -124,7 +109,7 @@ class _MenuClienteState extends State<MenuCliente> {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                Intro()), // Regresar a la pantalla de intro
+                                 Intro()), // Regresar a la pantalla de intro
                       );
                     }),
                   ],
