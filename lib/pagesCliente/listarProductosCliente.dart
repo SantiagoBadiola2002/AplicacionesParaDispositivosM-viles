@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
 import '../services/firebaseProductos_service.dart';
-import '../services/firebaseUsuario_service.dart';
 import '../styles/listarProductosCliente_styles.dart'; // Importar el archivo de estilos
 import './verProductoCliente.dart'; // Importar la pantalla de detalles
-import '../widget/appBar.dart'; // Importar el AppBar personalizado
 
 class ProductListCliente extends StatelessWidget {
   final FirebaseServicioProducto firebaseServicioProducto = FirebaseServicioProducto();
-  final Usuario usuario; // Asegúrate de recibir el idUsuario
-
-  ProductListCliente({required this.usuario}); // Constructor que recibe el idUsuario
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarConMenu(usuario: usuario, title: 'Productos'), // Usar el AppBar personalizado
+      appBar: AppStyles.appBar,
       body: Container(
         decoration: AppStyles.gradientBackground,
         child: FutureBuilder<List<Producto>>(
@@ -45,7 +40,7 @@ class ProductListCliente extends StatelessWidget {
                 return GestureDetector(
                   onTap: () {
                     // Al hacer clic, navega a ProductDetailsClient pasando el id del producto
-                    print('Llendo a verProductoCliente');
+                     print('Llendo a verProductoCliente');
                     Navigator.push(
                       context,
                       MaterialPageRoute(
