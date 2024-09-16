@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:hola_mundo_flutter/widget/appBar.dart';
 import '../services/firebaseProductos_service.dart';
-import '../styles/verProductoCliente_style.dart';  // Importamos el archivo de estilos
+import '../services/firebaseUsuario_service.dart';
+import '../styles/verProductoCliente_style.dart'; // Importamos el archivo de estilos
 import '../services/carrito_service.dart'; // Importa el servicio de carrito
 
 class ProductDetailsClient extends StatefulWidget {
   final String idProducto;
-
-  const ProductDetailsClient({Key? key, required this.idProducto}) : super(key: key);
+  final Usuario usuario;
+  const ProductDetailsClient(
+      {Key? key, required this.idProducto, required this.usuario})
+      : super(key: key);
 
   @override
   _ProductDetailsState createState() => _ProductDetailsState();
@@ -24,8 +28,8 @@ class _ProductDetailsState extends State<ProductDetailsClient> {
 
   // Método para obtener los datos del producto
   Future<void> _fetchProducto() async {
-    Producto? prod =
-        await FirebaseServicioProducto().obtenerProductoPorId(widget.idProducto);
+    Producto? prod = await FirebaseServicioProducto()
+        .obtenerProductoPorId(widget.idProducto);
     setState(() {
       producto = prod;
     });
@@ -57,12 +61,12 @@ class _ProductDetailsState extends State<ProductDetailsClient> {
   Widget build(BuildContext context) {
     final productPrice = producto?.precio ?? 0.0;
     final subtotal = quantity * productPrice;
+    final String nombreProducto = producto?.nombre ?? 'Cargando...';
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(producto?.nombre ?? 'Cargando...'),
-        backgroundColor: AppStyles.primaryColor,
-      ),
+      appBar: AppBarConMenu(
+          usuario: widget.usuario,
+          title: nombreProducto),
       body: producto == null
           ? Center(child: CircularProgressIndicator())
           : Container(

@@ -1,13 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:hola_mundo_flutter/widget/appBar.dart';
 import 'package:intl/intl.dart';
 import '../services/firebasePagos_service.dart';
+import '../services/firebaseUsuario_service.dart';
 import '../styles/historialComprasProducto_style.dart'; // Importa los estilos
 
 class HistorialComprasPage extends StatefulWidget {
-  final String idUsuario;
+  final Usuario usuario;
+  
 
-  const HistorialComprasPage({Key? key, required this.idUsuario})
+  const HistorialComprasPage({Key? key, required this.usuario})
       : super(key: key);
 
   @override
@@ -29,7 +32,7 @@ class _HistorialComprasPageState extends State<HistorialComprasPage> {
   Future<void> _obtenerHistorialPagosCliente() async {
     try {
       List<Map<String, dynamic>> historial = await _firebaseServicioPago
-          .obtenerHistorialPagosCliente(widget.idUsuario);
+          .obtenerHistorialPagosCliente(widget.usuario.idUsuario);
 
       setState(() {
         _purchaseHistory = historial;
@@ -47,10 +50,7 @@ class _HistorialComprasPageState extends State<HistorialComprasPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Historial de Compras'),
-        backgroundColor: AppStyles.appBarColor,
-      ),
+      appBar:  AppBarConMenu(usuario: widget.usuario, title: 'Historial de Compras'),
       body: Container(
         decoration: BoxDecoration(
           gradient: AppStyles.backgroundGradient,

@@ -33,8 +33,7 @@ Future<void> registrarPago({
 }
 
 
- // Obtener el historial de pagos de un cliente específico sin usar un índice compuesto
-  Future<List<Map<String, dynamic>>> obtenerHistorialPagosCliente(String idUsuario) async {
+ Future<List<Map<String, dynamic>>> obtenerHistorialPagosCliente(String idUsuario) async {
   if (idUsuario.isEmpty) {
     print('Error: ID de usuario no puede estar vacío.');
     return [];
@@ -42,20 +41,31 @@ Future<void> registrarPago({
 
   try {
     QuerySnapshot snapshot = await pagosCollection
-      .where('IDUsuario', isEqualTo: idUsuario)
-      .get();
-      
-    // Mapeamos los datos incluyendo el ID del documento
-    return snapshot.docs.map((doc) {
+        .where('IDUsuario', isEqualTo: idUsuario)
+        .get();
+
+    // Mapeamos los datos, incluyendo el ID del documento
+    List<Map<String, dynamic>> pagos = snapshot.docs.map((doc) {
       var data = doc.data() as Map<String, dynamic>;
       data['ID'] = doc.id; // Asignar el ID del documento
       return data;
     }).toList();
+
+    // Ordenar la lista localmente por el campo 'Fecha'
+    pagos.sort((a, b) {
+      Timestamp fechaA = a['Fecha'];
+      Timestamp fechaB = b['Fecha'];
+      return fechaB.compareTo(fechaA); // Orden descendente (más reciente primero)
+    });
+
+    return pagos;
   } catch (e) {
     print('Error al obtener historial de pagos del cliente: $e');
     return [];
   }
 }
+
+
 
 
 
@@ -79,28 +89,24 @@ Future<List<Map<String, dynamic>>> obtenerHistorialComprasProducto(String idProd
       if (data != null && data.containsKey('Productos')) {
         final productos = data['Productos'] as List<dynamic>;
 
-        if (productos is List) {
-          for (var producto in productos) {
-            if (producto['IDProducto'] == idProducto) {
-              // Convertir Timestamp a DateTime y luego a un formato legible
-              final Timestamp timestamp = data['Fecha'];
-              final DateTime dateTime = timestamp.toDate();
-              final String fechaFormateada = dateFormatter.format(dateTime);
+        for (var producto in productos) {
+          if (producto['IDProducto'] == idProducto) {
+            // Convertir Timestamp a DateTime y luego a un formato legible
+            final Timestamp timestamp = data['Fecha'];
+            final DateTime dateTime = timestamp.toDate();
+            final String fechaFormateada = dateFormatter.format(dateTime);
 
-              // Añadir al historial
-              historial.add({
-                'Fecha': fechaFormateada,  // Usamos la fecha formateada
-                'NombreCliente': data['NombreCliente'],
-                'Cantidad': producto['Cantidad'],
-                'NombreProducto': producto['Nombre'],
-                'Precio': producto['Precio'],
-              });
-            }
+            // Añadir al historial
+            historial.add({
+              'Fecha': fechaFormateada,  // Usamos la fecha formateada
+              'NombreCliente': data['NombreCliente'],
+              'Cantidad': producto['Cantidad'],
+              'NombreProducto': producto['Nombre'],
+              'Precio': producto['Precio'],
+            });
           }
-        } else {
-          print('El campo "Productos" no es una lista en el documento con ID: ${doc.id}');
         }
-      } else {
+            } else {
         print('El campo "Productos" no existe o los datos son nulos en el documento con ID: ${doc.id}');
       }
     }
