@@ -79,28 +79,24 @@ Future<List<Map<String, dynamic>>> obtenerHistorialComprasProducto(String idProd
       if (data != null && data.containsKey('Productos')) {
         final productos = data['Productos'] as List<dynamic>;
 
-        if (productos is List) {
-          for (var producto in productos) {
-            if (producto['IDProducto'] == idProducto) {
-              // Convertir Timestamp a DateTime y luego a un formato legible
-              final Timestamp timestamp = data['Fecha'];
-              final DateTime dateTime = timestamp.toDate();
-              final String fechaFormateada = dateFormatter.format(dateTime);
+        for (var producto in productos) {
+          if (producto['IDProducto'] == idProducto) {
+            // Convertir Timestamp a DateTime y luego a un formato legible
+            final Timestamp timestamp = data['Fecha'];
+            final DateTime dateTime = timestamp.toDate();
+            final String fechaFormateada = dateFormatter.format(dateTime);
 
-              // Añadir al historial
-              historial.add({
-                'Fecha': fechaFormateada,  // Usamos la fecha formateada
-                'NombreCliente': data['NombreCliente'],
-                'Cantidad': producto['Cantidad'],
-                'NombreProducto': producto['Nombre'],
-                'Precio': producto['Precio'],
-              });
-            }
+            // Añadir al historial
+            historial.add({
+              'Fecha': fechaFormateada,  // Usamos la fecha formateada
+              'NombreCliente': data['NombreCliente'],
+              'Cantidad': producto['Cantidad'],
+              'NombreProducto': producto['Nombre'],
+              'Precio': producto['Precio'],
+            });
           }
-        } else {
-          print('El campo "Productos" no es una lista en el documento con ID: ${doc.id}');
         }
-      } else {
+            } else {
         print('El campo "Productos" no existe o los datos son nulos en el documento con ID: ${doc.id}');
       }
     }
