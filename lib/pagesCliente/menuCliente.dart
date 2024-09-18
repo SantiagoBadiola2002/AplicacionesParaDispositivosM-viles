@@ -50,10 +50,7 @@ class _MenuClienteState extends State<MenuCliente> {
           ? const Center(
               child: CircularProgressIndicator()) // Indicador de carga
           : Container(
-              decoration: BoxDecoration(
-                gradient: MenuClienteStyles
-                    .backgroundGradient, // Aplicar el gradiente
-              ),
+              decoration: MenuClienteStyles.backgroundDecoration, // Aplicar la decoración de fondo
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -72,7 +69,7 @@ class _MenuClienteState extends State<MenuCliente> {
                     // Título "MENU"
                     Text(
                       'MENU',
-                      style: MenuClienteStyles.titleTextStyle,
+                      style: MenuClienteStyles.titleTextStyle, // Aplicar el estilo del título
                     ),
                     const SizedBox(height: 24),
                     // Botones
@@ -140,11 +137,11 @@ class _MenuClienteState extends State<MenuCliente> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: ElevatedButton(
-        style: MenuClienteStyles.buttonStyle,
+        style: MenuClienteStyles.buttonStyle, // Aplicar el estilo del botón
         onPressed: onPressed,
         child: Text(
           text,
-          style: MenuClienteStyles.buttonTextStyle,
+          style: MenuClienteStyles.buttonTextStyle, // Aplicar el estilo del texto del botón
         ),
       ),
     );

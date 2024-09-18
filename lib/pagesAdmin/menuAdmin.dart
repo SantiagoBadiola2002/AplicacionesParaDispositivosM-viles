@@ -37,7 +37,7 @@ class _MenuAdminState extends State<MenuAdmin> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: AppStyles.gradientBackground,
+        decoration: AppStyles.imageBackground,
         child: usuario == null
             ? Center(
                 child:

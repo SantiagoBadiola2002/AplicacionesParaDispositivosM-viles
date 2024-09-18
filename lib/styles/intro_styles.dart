@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
 class Styles {
-  // Decoración de fondo
+  // Decoración de fondo con imagen
   static const BoxDecoration backgroundDecoration = BoxDecoration(
-    gradient: LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [Color(0xFF318C7A), Color(0xFF1E293B)],
+    image: DecorationImage(
+      image: AssetImage('lib/images/imagenFondoPantalla.png'),
+      fit: BoxFit.cover, // Ajusta la imagen para cubrir toda la pantalla
     ),
   );
 

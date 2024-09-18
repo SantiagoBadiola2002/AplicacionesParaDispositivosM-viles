@@ -16,7 +16,7 @@ class ProductListCliente extends StatelessWidget {
     return Scaffold(
       appBar: AppBarConMenu(usuario: usuario, title: 'Productos'), // Usar el AppBar personalizado
       body: Container(
-        decoration: AppStyles.gradientBackground,
+        decoration: AppStyles.backgroundImage,
         child: FutureBuilder<List<Producto>>(
           future: firebaseServicioProducto.obtenerProductos(),
           builder: (context, snapshot) {

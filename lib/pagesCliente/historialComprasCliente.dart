@@ -4,12 +4,11 @@ import 'package:hola_mundo_flutter/widget/appBar.dart';
 import 'package:intl/intl.dart';
 import '../services/firebasePagos_service.dart';
 import '../services/firebaseUsuario_service.dart';
-import '../styles/historialComprasProducto_style.dart'; // Importa los estilos
+import '../styles/historialComprasCliente_style.dart'; // Importa los estilos
 
 class HistorialComprasPage extends StatefulWidget {
   final Usuario usuario;
   
-
   const HistorialComprasPage({Key? key, required this.usuario})
       : super(key: key);
 
@@ -50,10 +49,13 @@ class _HistorialComprasPageState extends State<HistorialComprasPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:  AppBarConMenu(usuario: widget.usuario, title: 'Historial de Compras'),
+      appBar: AppBarConMenu(usuario: widget.usuario, title: 'Historial de Compras'),
       body: Container(
         decoration: BoxDecoration(
-          gradient: AppStyles.backgroundGradient,
+          image: DecorationImage(
+            image: AssetImage('lib/images/imagenFondoPantalla.png'),
+            fit: BoxFit.cover,
+          ),
         ),
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())

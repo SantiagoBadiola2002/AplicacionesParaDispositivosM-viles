@@ -6,7 +6,7 @@ class AppStyles {
   static const Color secondaryColor = Color(0xFF1E293B);
   static const Color buttonColor = Color(0xFF334155);
   static const Color textColor = Colors.white;
-  
+
   // Text Styles
   static const TextStyle titleStyle = TextStyle(
     fontSize: 24,
@@ -19,11 +19,10 @@ class AppStyles {
   );
 
   // Decorations
-  static const BoxDecoration gradientBackground = BoxDecoration(
-    gradient: LinearGradient(
-      colors: [primaryColor, secondaryColor],
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
+  static BoxDecoration imageBackground = BoxDecoration(
+    image: DecorationImage(
+      image: AssetImage('lib/images/imagenFondoPantalla.png'),
+      fit: BoxFit.cover, // Ajustar la imagen para que cubra toda la pantalla
     ),
   );
 

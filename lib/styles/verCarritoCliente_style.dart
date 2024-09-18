@@ -51,7 +51,7 @@ class AppStyles {
   // Padding
   static const EdgeInsetsGeometry paddingAll = EdgeInsets.all(16.0);
   
-  // Borde
+  // Bordes
   static final BorderSide enabledBorder = BorderSide(
     color: whiteColor.withOpacity(0.3),
     width: 1.0,
@@ -62,12 +62,11 @@ class AppStyles {
     width: 1.0,
   );
 
-  // Bordes
-  static final BoxDecoration backgroundGradient = BoxDecoration(
-    gradient: LinearGradient(
-      colors: [primaryColor, secondaryColor],
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
+  // Fondo con imagen
+  static BoxDecoration backgroundImage = BoxDecoration(
+    image: DecorationImage(
+      image: AssetImage('lib/images/imagenFondoPantalla.png'), // Asegúrate de que la ruta sea correcta
+      fit: BoxFit.cover,
     ),
   );
 }

@@ -7,7 +7,10 @@ class AppStyles {
   static const Color buttonColor = Color(0xFF334155);
   static const Color textColor = Colors.white;
 
-  // Gradiente
+  // Imagen de fondo
+  static const String backgroundImage = 'lib/images/imagenFondoPantalla.png';
+
+  // Gradiente (si deseas usarlo en otros lugares)
   static const LinearGradient gradient = LinearGradient(
     colors: [primaryColor, secondaryColor],
     begin: Alignment.topLeft,

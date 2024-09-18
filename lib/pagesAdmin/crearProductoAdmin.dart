@@ -30,7 +30,7 @@ class _NuevoProductoScreenState extends State<NuevoProductoScreen> {
         title: Text('Nuevo Producto'),
       ),
       body: Container(
-        decoration: AppStyles.gradientBackground,
+        decoration: AppStyles.imageBackground,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(

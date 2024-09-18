@@ -11,7 +11,7 @@ class ProductList extends StatelessWidget {
     return Scaffold(
       appBar: AppStyles.appBar,
       body: Container(
-        decoration: AppStyles.gradientBackground,
+        decoration: AppStyles.imageBackground,
         child: FutureBuilder<List<Producto>>(
           future: firebaseServicioProducto.obtenerProductos(),
           builder: (context, snapshot) {

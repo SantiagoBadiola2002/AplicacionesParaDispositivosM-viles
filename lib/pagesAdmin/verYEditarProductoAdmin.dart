@@ -84,7 +84,10 @@ class _DetallesProductoState extends State<DetallesProducto> {
 
           return Container(
             decoration: BoxDecoration(
-              gradient: AppStyles.gradient, // Aplicar el gradiente
+              image: DecorationImage(
+                image: AssetImage(AppStyles.backgroundImage), // Usar la propiedad del estilo
+                fit: BoxFit.cover,
+              ),
             ),
             child: SafeArea(
               child: Center(
@@ -92,8 +95,10 @@ class _DetallesProductoState extends State<DetallesProducto> {
                   width: double.infinity,
                   constraints: BoxConstraints(maxWidth: 600),
                   padding: EdgeInsets.all(16.0),
+                  // Cambia la decoración para eliminar la tonalidad blanca
+                  // Si es necesario, puedes aplicar un fondo semitransparente para el contenido
                   decoration: BoxDecoration(
-                    gradient: AppStyles.gradient, // Aplicar el gradiente
+                    color: Colors.transparent, // Fondo transparente
                     borderRadius: BorderRadius.circular(8),
                     boxShadow: [
                       BoxShadow(

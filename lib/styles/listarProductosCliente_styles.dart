@@ -8,12 +8,11 @@ class AppStyles {
   static const Color textColor = Colors.white;
   static const Color cardTextColor = Colors.teal;
 
-  // Gradient Background
-  static const BoxDecoration gradientBackground = BoxDecoration(
-    gradient: LinearGradient(
-      colors: [primaryColor, secondaryColor],
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
+  // Background Image
+  static BoxDecoration backgroundImage = BoxDecoration(
+    image: DecorationImage(
+      image: AssetImage('lib/images/imagenFondoPantalla.png'),
+      fit: BoxFit.cover,
     ),
   );
 

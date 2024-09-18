@@ -5,7 +5,15 @@ class AppStyles {
   static const Color primaryColor = Color(0xFF318C7A);
   static const Color secondaryColor = Color(0xFF1E293B);
   
-  // Gradiente de fondo
+  // Imagen de fondo
+  static BoxDecoration backgroundImage = BoxDecoration(
+    image: DecorationImage(
+      image: AssetImage('lib/images/imagenFondoPantalla.png'),
+      fit: BoxFit.cover,
+    ),
+  );
+  
+  // Gradiente de fondo (opcional, por si lo necesitas más adelante)
   static const BoxDecoration backgroundGradient = BoxDecoration(
     gradient: LinearGradient(
       colors: [primaryColor, secondaryColor],

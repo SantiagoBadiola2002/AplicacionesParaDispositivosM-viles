@@ -70,7 +70,7 @@ class _ProductDetailsState extends State<ProductDetailsClient> {
       body: producto == null
           ? Center(child: CircularProgressIndicator())
           : Container(
-              decoration: AppStyles.backgroundGradient,
+              decoration: AppStyles.backgroundImage, // Cambiado aquí
               child: Center(
                 child: Padding(
                   padding: AppStyles.paddingAll,

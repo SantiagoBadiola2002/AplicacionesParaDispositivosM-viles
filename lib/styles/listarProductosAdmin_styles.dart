@@ -8,22 +8,21 @@ class AppStyles {
   static const Color textColor = Colors.white;
   static const Color cardTextColor = Colors.teal;
 
-  // Gradient Background
-  static const BoxDecoration gradientBackground = BoxDecoration(
-    gradient: LinearGradient(
-      colors: [primaryColor, secondaryColor],
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
+  // Fondo de imagen
+  static BoxDecoration imageBackground = BoxDecoration(
+    image: DecorationImage(
+      image: AssetImage('lib/images/imagenFondoPantalla.png'),
+      fit: BoxFit.cover, // Ajustar la imagen para cubrir toda la pantalla
     ),
   );
 
   // AppBar
   static AppBar appBar = AppBar(
-    title: Text('Nuestros Productos'),
+    title: const Text('Nuestros Productos'),
     backgroundColor: primaryColor,
   );
 
-  // Text Styles
+  // Estilos de texto
   static const TextStyle productTitleStyle = TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.bold,
@@ -39,9 +38,9 @@ class AppStyles {
     color: Colors.black, // Puedes cambiar el color si es necesario
   );
 
-  // Card Style
+  // Estilo de tarjetas
   static const double cardElevation = 5.0;
 
-  // Error Image
+  // Imagen de error
   static const String placeholderImage = 'lib/images/noImagenProducto.webp';
 }

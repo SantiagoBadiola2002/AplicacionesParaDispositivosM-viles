@@ -84,7 +84,7 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
     return Scaffold(
       appBar: AppBarConMenu(usuario:  widget.usuario, title: 'Tu Carrito'),
       body: Container(
-        decoration: AppStyles.backgroundGradient,
+        decoration: AppStyles.backgroundImage,
         child: _cartItems.isEmpty
             ? Center(child: Text('Tu carrito está vacío', style: AppStyles.emptyCartTextStyle))
             : Padding(

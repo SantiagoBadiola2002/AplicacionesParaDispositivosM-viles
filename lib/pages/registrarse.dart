@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/firebaseUsuario_service.dart';  // Importa tu servicio de Firebase
+import '../styles/registrarse_styles.dart';  // Importa el archivo de estilos
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -29,7 +30,7 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.teal,
+        backgroundColor: SignUpStyles.appBarColor,
         elevation: 0, // Eliminar la sombra del AppBar
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
@@ -39,18 +40,12 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
       ),
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFF318C7A), Color(0xFF1E293B)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
+        decoration: SignUpStyles.bodyDecoration,
         child: Center(
           child: ConstrainedBox(
             constraints: BoxConstraints(maxWidth: 400),
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: SignUpStyles.padding,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -59,10 +54,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   Container(
                     width: 96,
                     height: 96,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.grey[500],
-                    ),
+                    decoration: SignUpStyles.circleDecoration,
                     child: Center(
                       child: Icon(
                         Icons.add,
@@ -72,14 +64,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                   ),
                   SizedBox(height: 16),
-                  Text(
-                    'Sign Up',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  Text('Sign Up', style: SignUpStyles.titleStyle),
                   SizedBox(height: 32),
                   // Form
                   Form(
@@ -87,102 +72,44 @@ class _SignUpPageState extends State<SignUpPage> {
                       children: [
                         // Nombre de Usuario Field
                         TextFormField(
-                          controller: nombreController, // Vincula con el controlador
-                          decoration: InputDecoration(
-                            labelText: 'Nombre de Usuario',
-                            labelStyle: TextStyle(color: Colors.white),
-                            filled: true,
-                            fillColor: Colors.transparent,
-                            border: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white, width: 2),
-                            ),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                          ),
-                          style: TextStyle(color: Colors.white),
+                          controller: nombreController,
+                          decoration: SignUpStyles.inputDecoration('Nombre de Usuario'),
+                          style: SignUpStyles.inputTextStyle,
                         ),
                         SizedBox(height: 16),
                         // Email Field
                         TextFormField(
-                          controller: emailController, // Vincula con el controlador
+                          controller: emailController,
                           keyboardType: TextInputType.emailAddress,
-                          decoration: InputDecoration(
-                            labelText: 'Email',
-                            labelStyle: TextStyle(color: Colors.white),
-                            filled: true,
-                            fillColor: Colors.transparent,
-                            border: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white, width: 2),
-                            ),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                          ),
-                          style: TextStyle(color: Colors.white),
+                          decoration: SignUpStyles.inputDecoration('Email'),
+                          style: SignUpStyles.inputTextStyle,
                         ),
                         SizedBox(height: 16),
                         // Contraseña Field con visibilidad alternada
                         TextFormField(
-                          controller: contraseniaController, // Vincula con el controlador
-                          obscureText: !_passwordVisible, // Control de visibilidad
-                          decoration: InputDecoration(
-                            labelText: 'Contraseña',
-                            labelStyle: TextStyle(color: Colors.white),
-                            filled: true,
-                            fillColor: Colors.transparent,
-                            border: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white, width: 2),
-                            ),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                            // Botón para mostrar/ocultar la contraseña
+                          controller: contraseniaController,
+                          obscureText: !_passwordVisible,
+                          decoration: SignUpStyles.inputDecoration('Contraseña').copyWith(
                             suffixIcon: IconButton(
                               icon: Icon(
-                                // Cambia el ícono según la visibilidad
                                 _passwordVisible ? Icons.visibility : Icons.visibility_off,
                                 color: Colors.white,
                               ),
                               onPressed: () {
-                                // Actualiza el estado para alternar la visibilidad
                                 setState(() {
                                   _passwordVisible = !_passwordVisible;
                                 });
                               },
                             ),
                           ),
-                          style: TextStyle(color: Colors.white),
+                          style: SignUpStyles.inputTextStyle,
                         ),
                         SizedBox(height: 16),
                         // Imagen URL Field
                         TextFormField(
-                          controller: imagenController, // Controlador para URL de la imagen
-                          decoration: InputDecoration(
-                            labelText: 'URL de Imagen de Perfil',
-                            labelStyle: TextStyle(color: Colors.white),
-                            filled: true,
-                            fillColor: Colors.transparent,
-                            border: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white, width: 2),
-                            ),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                          ),
-                          style: TextStyle(color: Colors.white),
+                          controller: imagenController,
+                          decoration: SignUpStyles.inputDecoration('URL de Imagen de Perfil'),
+                          style: SignUpStyles.inputTextStyle,
                         ),
                         SizedBox(height: 32),
                         // Sign Up Button
@@ -191,9 +118,8 @@ class _SignUpPageState extends State<SignUpPage> {
                             String nombre = nombreController.text;
                             String email = emailController.text;
                             String contrasenia = contraseniaController.text;
-                            String imagenUrl = imagenController.text;  // Obtén el valor de la URL de imagen
+                            String imagenUrl = imagenController.text;
 
-                            // Verificamos que los campos no estén vacíos
                             if (nombre.isEmpty || email.isEmpty || contrasenia.isEmpty || imagenUrl.isEmpty) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text('Por favor, llena todos los campos')),
@@ -202,28 +128,17 @@ class _SignUpPageState extends State<SignUpPage> {
                             }
 
                             try {
-                              // Llamamos al servicio para registrar al usuario
                               await servicioUsuario.registrarUsuario(nombre, email, contrasenia, imagenUrl);
-                              print('Usuario registrado${nombre}correctamente');
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Usuario registrado${nombre}correctamente')),
+                                SnackBar(content: Text('Usuario registrado $nombre correctamente')),
                               );
-
-                              // Redirigir a otra pantalla si es necesario
-                              // Navigator.pushReplacementNamed(context, '/home');
                             } catch (e) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text('Error al registrar usuario: $e')),
                               );
                             }
                           },
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            backgroundColor: Color(0xFF334155),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.zero,
-                            ),
-                          ),
+                          style: SignUpStyles.buttonStyle,
                           child: Text('Registrarse'),
                         ),
                       ],

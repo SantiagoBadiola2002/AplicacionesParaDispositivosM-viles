@@ -7,22 +7,21 @@ class AppStyles {
   static const Color buttonColor = Color(0xFF1E293B);
   static const Color textColor = Colors.white;
 
-  // Fondo Gradiente
-  static const BoxDecoration gradientBackground = BoxDecoration(
-    gradient: LinearGradient(
-      colors: [primaryColor, secondaryColor],
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
+  // Fondo de Imagen
+  static BoxDecoration imageBackground = BoxDecoration(
+    image: DecorationImage(
+      image: AssetImage('lib/images/imagenFondoPantalla.png'),
+      fit: BoxFit.cover, // Ajustar la imagen para cubrir toda la pantalla
     ),
   );
 
   // AppBar
   static AppBar appBar = AppBar(
-    title: Text('Menú Admin'),
+    title: const Text('Menú Admin'),
     backgroundColor: primaryColor,
   );
 
-  // Text Styles
+  // Estilo de texto para títulos
   static const TextStyle titleTextStyle = TextStyle(
     fontSize: 24,
     fontWeight: FontWeight.bold,

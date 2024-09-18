@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 class AppStyles {
   static const Color appBarColor = Color(0xFF318C7A);
 
-  static const Gradient backgroundGradient = LinearGradient(
-    colors: [Color(0xFF318C7A), Color(0xFF1E293B)],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
+  static BoxDecoration backgroundDecoration = BoxDecoration(
+    image: DecorationImage(
+      image: AssetImage('lib/images/imagenFondoPantalla.png'),
+      fit: BoxFit.cover,
+    ),
   );
 
   static const EdgeInsets listPadding = EdgeInsets.all(16);

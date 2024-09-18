@@ -1,29 +1,27 @@
 import 'package:flutter/material.dart';
 
 class Styles {
-  // Fondo del LoginScreen
-  static const BoxDecoration backgroundDecoration = BoxDecoration(
-    gradient: LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [Color(0xFF318C7A), Color(0xFF1E293B)],
+  // Fondo del LoginScreen con una imagen
+  static final BoxDecoration backgroundDecoration = BoxDecoration(
+    image: DecorationImage(
+      image: AssetImage('lib/images/imagenFondoPantalla.png'), // Reemplaza con la imagen de fondo
+      fit: BoxFit.cover, // Ajusta la imagen para cubrir toda la pantalla
     ),
   );
 
   // Decoración del contenedor del formulario de login
   static const EdgeInsets containerPadding = EdgeInsets.all(20);
-static final BoxDecoration containerDecoration = BoxDecoration( // Cambia 'const' por 'final'
-  color: Colors.white.withOpacity(0.1), // No puede ser const porque withOpacity no es constante
-  borderRadius: BorderRadius.circular(8), // No puede ser const porque circular() no es constante
-  boxShadow: [
-    BoxShadow(
-      color: Colors.black.withOpacity(0.1),
-      blurRadius: 6,
-      offset: Offset(0, 4),
-    ),
-  ],
-);
-
+  static final BoxDecoration containerDecoration = BoxDecoration(
+    color: Colors.white.withOpacity(0.1), // Fondo translúcido
+    borderRadius: BorderRadius.circular(8),
+    boxShadow: [
+      BoxShadow(
+        color: Colors.black.withOpacity(0.1),
+        blurRadius: 6,
+        offset: Offset(0, 4),
+      ),
+    ],
+  );
 
   // Icono
   static const Color iconColor = Colors.white;
