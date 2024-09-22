@@ -61,8 +61,7 @@ class _DetallesProductoState extends State<DetallesProducto> {
         backgroundColor: AppStyles.primaryColor,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: AppStyles.textColor),
-          onPressed: () =>
-              Navigator.of(context).pop(), // Acción para retroceder
+          onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
           'Detalles del Producto',
@@ -90,80 +89,78 @@ class _DetallesProductoState extends State<DetallesProducto> {
               ),
             ),
             child: SafeArea(
-              child: Center(
-                child: Container(
-                  width: double.infinity,
-                  constraints: BoxConstraints(maxWidth: 600),
-                  padding: EdgeInsets.all(16.0),
-                  // Cambia la decoración para eliminar la tonalidad blanca
-                  // Si es necesario, puedes aplicar un fondo semitransparente para el contenido
-                  decoration: BoxDecoration(
-                    color: Colors.transparent, // Fondo transparente
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 8.0,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Center(
-                        child: Container(
-                          width: 96,
-                          height: 96,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                              image: NetworkImage(
-                                producto.foto.isNotEmpty
-                                    ? producto.foto
-                                    : AppStyles.placeholderImage,
-                              ),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          margin: EdgeInsets.only(bottom: 16),
+              child: SingleChildScrollView( // Aquí usamos el SingleChildScrollView
+                child: Center(
+                  child: Container(
+                    width: double.infinity,
+                    constraints: BoxConstraints(maxWidth: 600),
+                    padding: EdgeInsets.all(16.0),
+                    decoration: BoxDecoration(
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 8.0,
+                          offset: Offset(0, 2),
                         ),
-                      ),
-                      Text(
-                        'Detalles del Producto',
-                        style: AppStyles.titleTextStyle,
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: 16),
-                      _buildTextField('ID', producto.idProducto, false,
-                          TextEditingController(text: producto.idProducto)),
-                      _buildTextField('Nombre', _nombreController.text, true,
-                          _nombreController),
-                      _buildTextField('Precio', _precioController.text, true,
-                          _precioController),
-                      _buildTextField('Cantidad en Stock',
-                          _stockController.text, true, _stockController),
-                      _buildTextField('Descripción', _detalleController.text,
-                          true, _detalleController),
-                      SizedBox(height: 24),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          _buildButton('EDITAR', _guardarCambios),
-                          _buildButton('HISTORIAL', () {
-                            // Acción para historial: navegar al widget de historial
-                            print('Navegando al historial de compras del producto con ID: ${widget.idProducto}');
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => HistorialCompras(
-                                    idProducto: widget.idProducto),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Center(
+                          child: Container(
+                            width: 96,
+                            height: 96,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: NetworkImage(
+                                  producto.foto.isNotEmpty
+                                      ? producto.foto
+                                      : AppStyles.placeholderImage,
+                                ),
+                                fit: BoxFit.cover,
                               ),
-                            );
-                          }),
-                        ],
-                      ),
-                    ],
+                            ),
+                            margin: EdgeInsets.only(bottom: 16),
+                          ),
+                        ),
+                        Text(
+                          'Detalles del Producto',
+                          style: AppStyles.titleTextStyle,
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 16),
+                        _buildTextField('ID', producto.idProducto, false,
+                            TextEditingController(text: producto.idProducto)),
+                        _buildTextField('Nombre', _nombreController.text, true,
+                            _nombreController),
+                        _buildTextField('Precio', _precioController.text, true,
+                            _precioController),
+                        _buildTextField('Cantidad en Stock',
+                            _stockController.text, true, _stockController),
+                        _buildTextField('Descripción', _detalleController.text,
+                            true, _detalleController),
+                        SizedBox(height: 24),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _buildButton('EDITAR', _guardarCambios),
+                            _buildButton('HISTORIAL', () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => HistorialCompras(
+                                      idProducto: widget.idProducto),
+                                ),
+                              );
+                            }),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

@@ -62,51 +62,52 @@ class _MenuAdminState extends State<MenuAdmin> {
                       style: AppStyles.titleTextStyle,
                     ),
                     SizedBox(height: 24),
-                    // Botón Crear Producto
-                    ElevatedButton(
-                      onPressed: () {
-                        print('Crear Producto');
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  NuevoProductoScreen()), // Navegar a NuevoProductoScreen
-                        );
-                      },
-                      child: Text('Crear Producto'),
-                      style: AppStyles.buttonStyle,
-                    ),
+                    // Botón Crear Producto con tamaño fijo
+                    _buildButton(context, 'Crear Producto', () {
+                      print('Crear Producto');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => NuevoProductoScreen(),
+                        ),
+                      );
+                    }),
                     SizedBox(height: 16),
-                    // Botón Listar Productos
-                    ElevatedButton(
-                      onPressed: () {
-                        print('Llendo a listarProductosAdmin');
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  ProductList()), // Navegar a la pantalla de ProductList
-                        );
-                      },
-                      child: Text('Listar Productos'),
-                      style: AppStyles.buttonStyle,
-                    ),
+                    // Botón Listar Productos con tamaño fijo
+                    _buildButton(context, 'Listar Productos', () {
+                      print('Llendo a listarProductosAdmin');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProductList(),
+                        ),
+                      );
+                    }),
                     SizedBox(height: 16),
-                    // Botón Salir
-                    ElevatedButton(
-                      onPressed: () {
-                        print('Salir');
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Intro()),
-                        );
-                      },
-                      child: Text('Salir'),
-                      style: AppStyles.buttonStyle,
-                    )
+                    // Botón Salir con tamaño fijo
+                    _buildButton(context, 'Salir', () {
+                      print('Salir');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Intro()),
+                      );
+                    }),
                   ],
                 ),
               ),
+      ),
+    );
+  }
+
+  // Método para crear botones con tamaño fijo
+  Widget _buildButton(BuildContext context, String text, VoidCallback onPressed) {
+    return SizedBox(
+      width: 200,  // Establece un ancho constante
+      height: 50,  // Establece una altura constante
+      child: ElevatedButton(
+        style: AppStyles.buttonStyle,
+        onPressed: onPressed,
+        child: Text(text),
       ),
     );
   }

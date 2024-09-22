@@ -25,13 +25,8 @@ class ProductList extends StatelessWidget {
 
             final productos = snapshot.data!;
 
-            return GridView.builder(
+            return ListView.builder(
               padding: const EdgeInsets.all(8.0),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 8.0,
-                mainAxisSpacing: 8.0,
-              ),
               itemCount: productos.length,
               itemBuilder: (context, index) {
                 final producto = productos[index];
@@ -48,50 +43,52 @@ class ProductList extends StatelessWidget {
                   },
                   child: Card(
                     elevation: AppStyles.cardElevation,
-                    child: Column(
-  crossAxisAlignment: CrossAxisAlignment.start,
-  children: [
-    Image.network(
-      producto.foto.isNotEmpty ? producto.foto : '',
-      height: 84,
-      width: double.infinity,
-      fit: BoxFit.cover,
-      errorBuilder: (context, error, stackTrace) {
-        return Image.asset(
-          AppStyles.placeholderImage,
-          height: 84,
-          width: double.infinity,
-          fit: BoxFit.cover,
-        );
-      },
-    ),
-    Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Text(
-        producto.nombre,
-        style: AppStyles.productTitleStyle,
-      ),
-    ),
-    Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: Text(
-        '\$${producto.precio.toStringAsFixed(2)}',
-        style: AppStyles.productPriceStyle,
-      ),
-    ),
-    Expanded(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text(
-          producto.detalle,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-        ),
-      ),
-    ),
-  ],
-),
-
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Image.network(
+                            producto.foto.isNotEmpty ? producto.foto : '',
+                            height: 100,
+                            width: 100,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Image.asset(
+                                AppStyles.placeholderImage,
+                                height: 100,
+                                width: 100,
+                                fit: BoxFit.cover,
+                              );
+                            },
+                          ),
+                          SizedBox(width: 12), // Espaciado entre la imagen y los textos
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  producto.nombre,
+                                  style: AppStyles.productTitleStyle,
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  '\$${producto.precio.toStringAsFixed(2)}',
+                                  style: AppStyles.productPriceStyle,
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  producto.detalle,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppStyles.productDetailStyle,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 );
               },

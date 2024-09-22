@@ -50,7 +50,8 @@ class _MenuClienteState extends State<MenuCliente> {
           ? const Center(
               child: CircularProgressIndicator()) // Indicador de carga
           : Container(
-              decoration: MenuClienteStyles.backgroundDecoration, // Aplicar la decoración de fondo
+              decoration: MenuClienteStyles
+                  .backgroundDecoration, // Aplicar la decoración de fondo
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -69,7 +70,8 @@ class _MenuClienteState extends State<MenuCliente> {
                     // Título "MENU"
                     Text(
                       'MENU',
-                      style: MenuClienteStyles.titleTextStyle, // Aplicar el estilo del título
+                      style: MenuClienteStyles
+                          .titleTextStyle, // Aplicar el estilo del título
                     ),
                     const SizedBox(height: 24),
                     // Botones
@@ -110,8 +112,7 @@ class _MenuClienteState extends State<MenuCliente> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => HistorialComprasPage(
-                              usuario:
-                                  usuario!), // Enviar solo el idUsuario
+                              usuario: usuario!), // Enviar solo el idUsuario
                         ),
                       );
                     }),
@@ -136,12 +137,17 @@ class _MenuClienteState extends State<MenuCliente> {
       BuildContext context, String text, VoidCallback onPressed) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: ElevatedButton(
-        style: MenuClienteStyles.buttonStyle, // Aplicar el estilo del botón
-        onPressed: onPressed,
-        child: Text(
-          text,
-          style: MenuClienteStyles.buttonTextStyle, // Aplicar el estilo del texto del botón
+      child: SizedBox(
+        width: 200, // Establece el mismo ancho para todos los botones
+        height: 53, // Establece la misma altura para todos los botones
+        child: ElevatedButton(
+          style: MenuClienteStyles.buttonStyle, // Aplicar el estilo del botón
+          onPressed: onPressed,
+          child: Text(
+            text,
+            style: MenuClienteStyles
+                .buttonTextStyle, // Aplicar el estilo del texto del botón
+          ),
         ),
       ),
     );
