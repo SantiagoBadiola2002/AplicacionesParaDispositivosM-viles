@@ -4,6 +4,8 @@ class AppStyles {
   // Colores principales
   static const Color primaryColor = Color(0xFF318C7A);
   static const Color secondaryColor = Color(0xFF1E293B);
+
+  static const String placeholderImage = 'lib/images/placeholder.png';
   
   // Imagen de fondo
   static BoxDecoration backgroundImage = BoxDecoration(

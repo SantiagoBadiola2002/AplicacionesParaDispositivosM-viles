@@ -1,4 +1,6 @@
+import 'dart:convert'; // Importa para trabajar con base64
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 class FirebaseServicioProducto {
   // Referencia a la colección "Herramienta" en Firestore
@@ -39,7 +41,7 @@ class FirebaseServicioProducto {
   // Método para crear un nuevo producto con ID autogenerado
   Future<void> crearProducto({
     required String nombre,
-    required String foto,
+    required String fotoBase64, // Ahora recibimos la imagen en formato base64
     required double precio,
     required String detalle,
     required int stock,
@@ -48,7 +50,7 @@ class FirebaseServicioProducto {
       // Creamos un nuevo producto sin ID, Firestore lo autogenera
       DocumentReference docRef = await productoCollection.add({
         'Nombre': nombre,
-        'Foto': foto,
+        'Foto': fotoBase64, // Guardamos la imagen como una cadena base64
         'Precio': precio,
         'Detalle': detalle,
         'Stock': stock,
@@ -88,7 +90,7 @@ class FirebaseServicioProducto {
 class Producto {
   final String idProducto;
   final String nombre;
-  final String foto;
+  final String foto; // Almacena la cadena base64 de la imagen
   final double precio;
   final String detalle;
   final int stock;
@@ -96,7 +98,7 @@ class Producto {
   Producto({
     required this.idProducto,
     required this.nombre,
-    required this.foto,
+    required this.foto, // Imagen en base64
     required this.precio,
     required this.detalle,
     required this.stock,
@@ -109,10 +111,16 @@ class Producto {
     return Producto(
       idProducto: doc.id,  // Usamos el ID del documento autogenerado por Firestore
       nombre: data['Nombre'] ?? '',
-      foto: data['Foto'] ?? '',
+      foto: data['Foto'] ?? '', // Imagen en base64
       precio: data['Precio'] != null ? data['Precio'].toDouble() : 0.0,
       detalle: data['Detalle'] ?? '',
       stock: data['Stock'] ?? 0,
     );
+  }
+
+  // Método para decodificar la imagen base64 y obtener un MemoryImage
+  MemoryImage obtenerImagenProducto() {
+    final decodedBytes = base64Decode(foto);
+    return MemoryImage(decodedBytes);
   }
 }

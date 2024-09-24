@@ -1,3 +1,4 @@
+import 'dart:convert'; // Importa para decodificar Base64
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hola_mundo_flutter/widget/appBar.dart';
@@ -8,9 +9,8 @@ import '../styles/historialComprasCliente_style.dart'; // Importa los estilos
 
 class HistorialComprasPage extends StatefulWidget {
   final Usuario usuario;
-  
-  const HistorialComprasPage({Key? key, required this.usuario})
-      : super(key: key);
+
+  const HistorialComprasPage({Key? key, required this.usuario}) : super(key: key);
 
   @override
   _HistorialComprasPageState createState() => _HistorialComprasPageState();
@@ -99,21 +99,33 @@ class _HistorialComprasPageState extends State<HistorialComprasPage> {
                                   color: AppStyles.bodyColor,
                                   child: Column(
                                     children: products.map<Widget>((product) {
+                                      String fotoBase64 = product['Foto'] ?? '';
+                                      MemoryImage? imagenProducto;
+                                      
+                                      // Decodificamos la imagen base64 si existe
+                                      if (fotoBase64.isNotEmpty) {
+                                        try {
+                                          final decodedBytes = base64Decode(fotoBase64);
+                                          imagenProducto = MemoryImage(decodedBytes);
+                                        } catch (e) {
+                                          print('Error al decodificar imagen base64: $e');
+                                        }
+                                      }
+
                                       return ListTile(
-                                        leading: Image.network(
-                                          product['Foto'] ?? '',
-                                          width: 60,
-                                          height: 60,
-                                          fit: BoxFit.cover,
-                                          errorBuilder: (context, error, stackTrace) {
-                                            return Image.asset(
-                                              'lib/images/noImagenProducto.webp',
-                                              width: 60,
-                                              height: 60,
-                                              fit: BoxFit.cover,
-                                            );
-                                          },
-                                        ),
+                                        leading: imagenProducto != null
+                                            ? Image(
+                                                image: imagenProducto,
+                                                width: 60,
+                                                height: 60,
+                                                fit: BoxFit.cover,
+                                              )
+                                            : Image.asset(
+                                                'lib/images/noImagenProducto.webp',
+                                                width: 60,
+                                                height: 60,
+                                                fit: BoxFit.cover,
+                                              ),
                                         title: Text(product['Nombre']),
                                         subtitle: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,

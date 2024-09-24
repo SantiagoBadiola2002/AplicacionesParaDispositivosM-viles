@@ -1,3 +1,4 @@
+import 'dart:convert'; // Importar para decodificar la imagen base64
 import 'package:flutter/material.dart';
 import '../services/firebaseProductos_service.dart';
 import '../pagesAdmin/verRegistroPagosProductoAdmin.dart';
@@ -57,6 +58,7 @@ class _DetallesProductoState extends State<DetallesProducto> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppStyles.secondaryColor, // Cambia el color de fondo
       appBar: AppBar(
         backgroundColor: AppStyles.primaryColor,
         leading: IconButton(
@@ -116,11 +118,11 @@ class _DetallesProductoState extends State<DetallesProducto> {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               image: DecorationImage(
-                                image: NetworkImage(
-                                  producto.foto.isNotEmpty
-                                      ? producto.foto
-                                      : AppStyles.placeholderImage,
-                                ),
+                                // Mostrar la imagen usando Image.memory para base64
+                                image: producto.foto.isNotEmpty
+                                    ? MemoryImage(base64Decode(producto.foto)) // Decodificar la imagen base64
+                                    : AssetImage(AppStyles.placeholderImage)
+                                        as ImageProvider, // Fallback si no hay imagen
                                 fit: BoxFit.cover,
                               ),
                             ),

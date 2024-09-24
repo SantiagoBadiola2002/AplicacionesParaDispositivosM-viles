@@ -4,12 +4,13 @@ import '../services/firebaseProductos_service.dart';
 import '../services/firebaseUsuario_service.dart';
 import '../styles/verProductoCliente_style.dart'; // Importamos el archivo de estilos
 import '../services/carrito_service.dart'; // Importa el servicio de carrito
+import 'dart:convert'; // Importar para usar Base64
 
 class ProductDetailsClient extends StatefulWidget {
   final String idProducto;
   final Usuario usuario;
-  const ProductDetailsClient(
-      {Key? key, required this.idProducto, required this.usuario})
+
+  const ProductDetailsClient({Key? key, required this.idProducto, required this.usuario})
       : super(key: key);
 
   @override
@@ -64,9 +65,7 @@ class _ProductDetailsState extends State<ProductDetailsClient> {
     final String nombreProducto = producto?.nombre ?? 'Cargando...';
 
     return Scaffold(
-      appBar: AppBarConMenu(
-          usuario: widget.usuario,
-          title: nombreProducto),
+      appBar: AppBarConMenu(usuario: widget.usuario, title: nombreProducto),
       body: producto == null
           ? Center(child: CircularProgressIndicator())
           : Container(
@@ -77,10 +76,8 @@ class _ProductDetailsState extends State<ProductDetailsClient> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      CircleAvatar(
-                        backgroundImage: NetworkImage(producto!.foto),
-                        radius: 100,
-                      ),
+                      // Mostrar imagen en formato Base64
+                      _buildImage(producto!.foto),
                       const SizedBox(height: 20),
                       Text(
                         producto!.nombre,
@@ -140,6 +137,25 @@ class _ProductDetailsState extends State<ProductDetailsClient> {
               ),
             ),
     );
+  }
+
+  // Widget para mostrar la imagen desde Base64
+  Widget _buildImage(String base64String) {
+    if (base64String.isNotEmpty) {
+      // Decodificar la cadena Base64 y convertirla a una imagen
+      return CircleAvatar(
+        backgroundImage: MemoryImage(
+          base64Decode(base64String),
+        ),
+        radius: 100,
+      );
+    } else {
+      // Placeholder en caso de que no haya imagen
+      return CircleAvatar(
+        backgroundImage: AssetImage(AppStyles.placeholderImage),
+        radius: 100,
+      );
+    }
   }
 
   // Widget para mostrar los campos de información del producto

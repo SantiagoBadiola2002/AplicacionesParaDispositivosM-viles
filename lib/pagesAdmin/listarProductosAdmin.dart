@@ -1,3 +1,4 @@
+import 'dart:convert'; // Para decodificar la imagen base64
 import 'package:flutter/material.dart';
 import '../services/firebaseProductos_service.dart';
 import 'verYEditarProductoAdmin.dart'; // Asegúrate de importar la pantalla correcta
@@ -48,20 +49,29 @@ class ProductList extends StatelessWidget {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Image.network(
-                            producto.foto.isNotEmpty ? producto.foto : '',
-                            height: 100,
-                            width: 100,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Image.asset(
-                                AppStyles.placeholderImage,
-                                height: 100,
-                                width: 100,
-                                fit: BoxFit.cover,
-                              );
-                            },
-                          ),
+                          // Mostrar la imagen usando Image.memory para base64
+                          producto.foto.isNotEmpty
+                              ? Image.memory(
+                                  base64Decode(producto.foto), // Decodifica la imagen base64
+                                  height: 100,
+                                  width: 100,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    // Si hay un error al mostrar la imagen, muestra una imagen por defecto
+                                    return Image.asset(
+                                      AppStyles.placeholderImage,
+                                      height: 100,
+                                      width: 100,
+                                      fit: BoxFit.cover,
+                                    );
+                                  },
+                                )
+                              : Image.asset(
+                                  AppStyles.placeholderImage, // Imagen por defecto si no hay imagen
+                                  height: 100,
+                                  width: 100,
+                                  fit: BoxFit.cover,
+                                ),
                           SizedBox(width: 12), // Espaciado entre la imagen y los textos
                           Expanded(
                             child: Column(

@@ -6,16 +6,15 @@ import '../services/carrito_service.dart'; // Importa el servicio de carrito
 import '../services/firebaseProductos_service.dart'; // Importa el servicio de productos
 import '../services/firebaseUsuario_service.dart';
 import '../services/firebasePagos_service.dart';
-import '../styles/verCarritoCliente_style.dart';  // Importa el archivo de estilos
+import '../styles/verCarritoCliente_style.dart'; // Importa el archivo de estilos
 
 class CartScreen extends StatefulWidget {
-  @override
-  _CartScreenState createState() => _CartScreenState();
-
-
   final Usuario usuario; // Recibe los datos del usuario
 
   CartScreen({required this.usuario});
+
+  @override
+  _CartScreenState createState() => _CartScreenState();
 }
 
 class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
@@ -82,11 +81,13 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarConMenu(usuario:  widget.usuario, title: 'Tu Carrito'),
+      appBar: AppBarConMenu(usuario: widget.usuario, title: 'Tu Carrito'),
       body: Container(
         decoration: AppStyles.backgroundImage,
         child: _cartItems.isEmpty
-            ? Center(child: Text('Tu carrito está vacío', style: AppStyles.emptyCartTextStyle))
+            ? Center(
+                child: Text('Tu carrito está vacío',
+                    style: AppStyles.emptyCartTextStyle))
             : Padding(
                 padding: AppStyles.paddingAll,
                 child: Column(
@@ -103,16 +104,21 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
                           return ListTile(
                             leading: producto != null
                                 ? CircleAvatar(
-                                    backgroundImage: NetworkImage(producto.foto),
+                                    backgroundImage:
+                                        producto.obtenerImagenProducto(), // Cambiar a MemoryImage
                                     radius: 50,
                                   )
                                 : null,
-                            title: Text(producto?.nombre ?? 'Producto', style: AppStyles.itemTitleTextStyle),
-                            subtitle: Text('\$${producto?.precio.toStringAsFixed(2) ?? '0.00'}', style: AppStyles.itemPriceTextStyle),
+                            title: Text(producto?.nombre ?? 'Producto',
+                                style: AppStyles.itemTitleTextStyle),
+                            subtitle: Text(
+                                '\$${producto?.precio.toStringAsFixed(2) ?? '0.00'}',
+                                style: AppStyles.itemPriceTextStyle),
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text('x$quantity', style: AppStyles.quantityTextStyle),
+                                Text('x$quantity',
+                                    style: AppStyles.quantityTextStyle),
                                 IconButton(
                                   icon: Icon(Icons.delete, color: Colors.red),
                                   onPressed: () => _removeProduct(productId),
@@ -130,83 +136,80 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text('Total', style: AppStyles.totalTextStyle),
-                          Text('\$${_totalPrice.toStringAsFixed(2)}', style: AppStyles.totalPriceTextStyle),
+                          Text('\$${_totalPrice.toStringAsFixed(2)}',
+                              style: AppStyles.totalPriceTextStyle),
                         ],
                       ),
                     ),
-                    // Dentro del método onPressed del botón COMPRAR
-ElevatedButton(
-  onPressed: () async {
-    if (_cartItems.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('El carrito está vacío')),
-      );
-      return;
-    }
+                    ElevatedButton(
+                      onPressed: () async {
+                        if (_cartItems.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('El carrito está vacío')),
+                          );
+                          return;
+                        }
 
-    final total = _totalPrice;
-    final productos = _cartItems.entries.map((entry) {
-      final producto = _productos[entry.key];
-      return {
-        'IDProducto': entry.key,
-        'Nombre': producto?.nombre,
-        'Cantidad': entry.value,
-        'Precio': producto?.precio,
-        'Foto': producto?.foto,
-      };
-    }).toList();
+                        final total = _totalPrice;
+                        final productos = _cartItems.entries.map((entry) {
+                          final producto = _productos[entry.key];
+                          return {
+                            'IDProducto': entry.key,
+                            'Nombre': producto?.nombre,
+                            'Cantidad': entry.value,
+                            'Precio': producto?.precio,
+                            'Foto': producto?.foto,
+                          };
+                        }).toList();
 
-    final pagoService = FirebaseServicioPago();
+                        final pagoService = FirebaseServicioPago();
 
-    try {
-      await pagoService.registrarPago(
-        idUsuario: widget.usuario.idUsuario,
-        nombreCliente: widget.usuario.nombre,
-        total: total,
-        productos: productos,
-      );
+                        try {
+                          await pagoService.registrarPago(
+                            idUsuario: widget.usuario.idUsuario,
+                            nombreCliente: widget.usuario.nombre,
+                            total: total,
+                            productos: productos,
+                          );
 
-      // Limpiar el carrito después de la compra
-      await _clearCart();
+                          await _clearCart();
 
-      // Mostrar mensaje de éxito
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Compra realizada exitosamente')),
-      );
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text('Compra realizada exitosamente')),
+                          );
 
-      // Redirigir a la página de historial de compras
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => HistorialComprasPage(usuario: widget.usuario),
-        ),
-      );
-
-    } catch (e) {
-      print('Error al registrar el pago: $e');
-      // Mostrar mensaje de error
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al realizar la compra')),
-      );
-    }
-  },
-  child: Row(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      Icon(Icons.shopping_cart),
-      SizedBox(width: 8),
-      Text('COMPRAR'),
-    ],
-  ),
-  style: ElevatedButton.styleFrom(
-    foregroundColor: AppStyles.primaryColor,
-    backgroundColor: AppStyles.whiteColor,
-    padding: EdgeInsets.symmetric(vertical: 16),
-    textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-  ),
-),
-
-
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  HistorialComprasPage(usuario: widget.usuario),
+                            ),
+                          );
+                        } catch (e) {
+                          print('Error al registrar el pago: $e');
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text('Error al realizar la compra')),
+                          );
+                        }
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.shopping_cart),
+                          SizedBox(width: 8),
+                          Text('COMPRAR'),
+                        ],
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: AppStyles.primaryColor,
+                        backgroundColor: AppStyles.whiteColor,
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        textStyle: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                    ),
                     SizedBox(height: 16),
                   ],
                 ),
