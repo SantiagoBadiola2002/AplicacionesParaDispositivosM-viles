@@ -1,3 +1,4 @@
+import 'dart:convert'; // Para convertir a base64
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirebaseServicioUsuario {
@@ -7,7 +8,7 @@ class FirebaseServicioUsuario {
 
   // Método para registrar un nuevo usuario
   Future<void> registrarUsuario(
-      String nombre, String email, String contrasenia, String imagenUrl) async {
+      String nombre, String email, String contrasenia, String imagenBase64) async {
     try {
       // Creamos el nuevo usuario con los datos proporcionados
       await usuarioCollection.add({
@@ -16,7 +17,7 @@ class FirebaseServicioUsuario {
         'Contrasenia':
             contrasenia, // Recuerda que no es seguro almacenar contraseñas sin cifrar
         'Rol': 'Cliente',
-        'Imagen': imagenUrl, // Nuevo campo para la URL de la imagen
+        'Imagen': imagenBase64, // Almacenamos la imagen en base64
       });
       print('Usuario registrado correctamente');
     } catch (e) {
@@ -54,30 +55,29 @@ class FirebaseServicioUsuario {
     }
   }
 
-// Método para verificar las credenciales
+  // Método para verificar las credenciales
   Future<Map<String, dynamic>?> verificarCredenciales(String email, String contrasenia) async {
-  try {
-    // Buscar al usuario en Firestore por su email y contraseña
-    QuerySnapshot snapshot = await usuarioCollection
-        .where('Email', isEqualTo: email)
-        .where('Contrasenia', isEqualTo: contrasenia)
-        .get();
+    try {
+      // Buscar al usuario en Firestore por su email y contraseña
+      QuerySnapshot snapshot = await usuarioCollection
+          .where('Email', isEqualTo: email)
+          .where('Contrasenia', isEqualTo: contrasenia)
+          .get();
 
-    if (snapshot.docs.isNotEmpty) {
-      // Devuelve el primer documento junto con su ID
-      return {
-        'userData': snapshot.docs.first.data() as Map<String, dynamic>,
-        'idUsuario': snapshot.docs.first.id
-      };
-    } else {
-      return null; // Si no se encuentra el usuario
+      if (snapshot.docs.isNotEmpty) {
+        // Devuelve el primer documento junto con su ID
+        return {
+          'userData': snapshot.docs.first.data() as Map<String, dynamic>,
+          'idUsuario': snapshot.docs.first.id
+        };
+      } else {
+        return null; // Si no se encuentra el usuario
+      }
+    } catch (e) {
+      print('Error al verificar las credenciales: $e');
+      return null;
     }
-  } catch (e) {
-    print('Error al verificar las credenciales: $e');
-    return null;
   }
-}
-
 }
 
 // Modelo de datos de Usuario
@@ -87,7 +87,7 @@ class Usuario {
   final String email;
   final String contrasenia;
   final String rol;
-  final String imagen; // Nuevo campo para la imagen
+  final String imagen; // Imagen almacenada en base64
 
   Usuario({
     required this.idUsuario,

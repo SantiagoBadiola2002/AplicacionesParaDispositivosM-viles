@@ -1,3 +1,4 @@
+import 'dart:convert'; // Para decodificar la imagen base64
 import 'package:flutter/material.dart';
 import '../services/firebaseUsuario_service.dart';
 import '../styles/menuCliente_styles.dart'; // Importa el archivo de estilos
@@ -59,11 +60,10 @@ class _MenuClienteState extends State<MenuCliente> {
                     // Imagen de perfil
                     CircleAvatar(
                       radius: 50,
-                      backgroundImage:
-                          usuario != null && usuario!.imagen.isNotEmpty
-                              ? NetworkImage(usuario!.imagen)
-                              : AssetImage(MenuClienteStyles.placeholderImage)
-                                  as ImageProvider,
+                      backgroundImage: usuario != null && usuario!.imagen.isNotEmpty
+                          ? _decodificarImagenBase64(usuario!.imagen)
+                          : AssetImage(MenuClienteStyles.placeholderImage)
+                              as ImageProvider,
                       backgroundColor: Colors.white,
                     ),
                     const SizedBox(height: 16),
@@ -151,5 +151,11 @@ class _MenuClienteState extends State<MenuCliente> {
         ),
       ),
     );
+  }
+
+  // Método para decodificar la imagen en base64 y devolver un MemoryImage
+  MemoryImage _decodificarImagenBase64(String base64String) {
+    final decodedBytes = base64Decode(base64String);
+    return MemoryImage(decodedBytes);
   }
 }

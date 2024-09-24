@@ -1,4 +1,7 @@
+import 'dart:convert'; // Para convertir a base64
+import 'dart:io'; // Para trabajar con archivos de imagen
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart'; // Paquete para seleccionar imágenes
 import '../services/firebaseUsuario_service.dart'; // Importa tu servicio de Firebase
 import '../styles/registrarse_styles.dart'; // Importa el archivo de estilos
 import '../pages/Intro.dart';
@@ -12,15 +15,37 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController nombreController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController contraseniaController = TextEditingController();
-  final TextEditingController imagenController = TextEditingController();
 
   final FirebaseServicioUsuario servicioUsuario = FirebaseServicioUsuario();
   bool _passwordVisible = false;
+
+  File? _imageFile; // Para almacenar la imagen seleccionada
+  final ImagePicker _picker = ImagePicker(); // Inicializamos el selector de imágenes
 
   @override
   void initState() {
     super.initState();
     _passwordVisible = false;
+  }
+
+  // Método para seleccionar una imagen de la galería
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path);
+      });
+    } else {
+      print('No se seleccionó ninguna imagen.');
+    }
+  }
+
+  // Método para convertir la imagen a base64
+  Future<String?> _imageToBase64(File? imageFile) async {
+    if (imageFile == null) return null;
+    final bytes = await imageFile.readAsBytes();
+    return base64Encode(bytes);
   }
 
   @override
@@ -48,23 +73,35 @@ class _SignUpPageState extends State<SignUpPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // Photo Circle
-                    Container(
-                      width: 96,
-                      height: 96,
-                      decoration: SignUpStyles.circleDecoration,
-                      child: Center(
-                        child: Icon(
-                          Icons.add,
-                          color: Colors.white,
-                          size: 48,
+                    // Photo Circle con la imagen seleccionada
+                    GestureDetector(
+                      onTap: _pickImage, // Al tocar, permite seleccionar una imagen
+                      child: Container(
+                        width: 96,
+                        height: 96,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.grey,
+                          image: _imageFile != null
+                              ? DecorationImage(
+                                  image: FileImage(_imageFile!), fit: BoxFit.cover)
+                              : null,
                         ),
+                        child: _imageFile == null
+                            ? Center(
+                                child: Icon(
+                                  Icons.add,
+                                  color: Colors.white,
+                                  size: 48,
+                                ),
+                              )
+                            : null,
                       ),
                     ),
                     SizedBox(height: 16),
                     Text('Sign Up', style: SignUpStyles.titleStyle),
                     SizedBox(height: 32),
-                    // Form
+                    // Formulario
                     Form(
                       child: Column(
                         children: [
@@ -102,13 +139,6 @@ class _SignUpPageState extends State<SignUpPage> {
                             ),
                             style: SignUpStyles.inputTextStyle,
                           ),
-                          SizedBox(height: 16),
-                          // Imagen URL Field
-                          TextFormField(
-                            controller: imagenController,
-                            decoration: SignUpStyles.inputDecoration('URL de Imagen de Perfil'),
-                            style: SignUpStyles.inputTextStyle,
-                          ),
                           SizedBox(height: 32),
                           // Sign Up Button
                           ElevatedButton(
@@ -116,17 +146,27 @@ class _SignUpPageState extends State<SignUpPage> {
                               String nombre = nombreController.text;
                               String email = emailController.text;
                               String contrasenia = contraseniaController.text;
-                              String imagenUrl = imagenController.text;
 
-                              if (nombre.isEmpty || email.isEmpty || contrasenia.isEmpty || imagenUrl.isEmpty) {
+                              if (nombre.isEmpty || email.isEmpty || contrasenia.isEmpty || _imageFile == null) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('Por favor, llena todos los campos')),
+                                  SnackBar(content: Text('Por favor, llena todos los campos y selecciona una imagen')),
+                                );
+                                return;
+                              }
+
+                              // Convertimos la imagen a base64
+                              String? imagenBase64 = await _imageToBase64(_imageFile);
+
+                              if (imagenBase64 == null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Error al convertir la imagen')),
                                 );
                                 return;
                               }
 
                               try {
-                                await servicioUsuario.registrarUsuario(nombre, email, contrasenia, imagenUrl);
+                                // Registrar usuario con la imagen en base64
+                                await servicioUsuario.registrarUsuario(nombre, email, contrasenia, imagenBase64);
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(content: Text('Usuario $nombre registrado correctamente')),
                                 );

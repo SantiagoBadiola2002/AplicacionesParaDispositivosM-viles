@@ -1,3 +1,4 @@
+import 'dart:convert'; // Para decodificar la imagen base64
 import 'package:flutter/material.dart';
 import '../services/firebaseUsuario_service.dart';
 import 'listarProductosAdmin.dart';
@@ -37,11 +38,10 @@ class _MenuAdminState extends State<MenuAdmin> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: AppStyles.imageBackground,
+        decoration: AppStyles.imageBackground, // Fondo personalizado
         child: usuario == null
-            ? Center(
-                child:
-                    CircularProgressIndicator(), // Muestra un cargando si no hay datos
+            ? const Center(
+                child: CircularProgressIndicator(), // Indicador de carga
               )
             : Center(
                 child: Column(
@@ -50,21 +50,19 @@ class _MenuAdminState extends State<MenuAdmin> {
                     // Imagen de perfil del usuario
                     CircleAvatar(
                       radius: 50,
-                      backgroundImage: usuario!.imagen.isNotEmpty
-                          ? NetworkImage(
-                              usuario!.imagen) // Cargar la imagen desde la URL
-                          : AssetImage(AppStyles.placeholderImage)
-                              as ImageProvider, // Imagen por defecto si no hay imagen
+                      backgroundImage: usuario != null && usuario!.imagen.isNotEmpty
+                          ? _obtenerImagenUsuario(usuario!.imagen)
+                          : AssetImage(AppStyles.placeholderImage) as ImageProvider,
+                      backgroundColor: Colors.white,
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     Text(
                       'MENÚ ADMIN',
-                      style: AppStyles.titleTextStyle,
+                      style: AppStyles.titleTextStyle, // Estilo del título
                     ),
-                    SizedBox(height: 24),
+                    const SizedBox(height: 24),
                     // Botón Crear Producto con tamaño fijo
                     _buildButton(context, 'Crear Producto', () {
-                      print('Crear Producto');
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -72,10 +70,9 @@ class _MenuAdminState extends State<MenuAdmin> {
                         ),
                       );
                     }),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     // Botón Listar Productos con tamaño fijo
                     _buildButton(context, 'Listar Productos', () {
-                      print('Llendo a listarProductosAdmin');
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -83,10 +80,9 @@ class _MenuAdminState extends State<MenuAdmin> {
                         ),
                       );
                     }),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     // Botón Salir con tamaño fijo
                     _buildButton(context, 'Salir', () {
-                      print('Salir');
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => Intro()),
@@ -105,10 +101,22 @@ class _MenuAdminState extends State<MenuAdmin> {
       width: 200,  // Establece un ancho constante
       height: 50,  // Establece una altura constante
       child: ElevatedButton(
-        style: AppStyles.buttonStyle,
+        style: AppStyles.buttonStyle, // Estilo de botón personalizado
         onPressed: onPressed,
         child: Text(text),
       ),
     );
+  }
+
+  // Método para manejar la imagen del usuario
+  ImageProvider _obtenerImagenUsuario(String imagen) {
+    if (imagen.startsWith('http')) {
+      // Si la imagen es una URL (por ejemplo, desde Firebase Storage)
+      return NetworkImage(imagen);
+    } else {
+      // Si la imagen es una cadena base64
+      final decodedBytes = base64Decode(imagen);
+      return MemoryImage(decodedBytes);
+    }
   }
 }
